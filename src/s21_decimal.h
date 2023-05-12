@@ -13,7 +13,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2,
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
-
+void equal_exponents(int exp1, int exp2, s21_decimal *value_to_increase);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
@@ -44,18 +44,12 @@ int s21_negate(s21_decimal value, s21_decimal *result);  // )))))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int get_exp(
-    s21_decimal value);  // при записи в виде шестнадцатеричного числа за
-                         // экспоненту отвечает 3 и 4 цифры, т.е 0x00XX0000. При
-                         // этом значения могут варьироваться от 0 до 28, т.е.
-                         // от 0x00000000 до 0x001С0000
-int get_sign(
-    s21_decimal value);  // при записи в виде шестнадцатеричного числа при
-                         // положительном знаке первое число будет 0, т.е
-                         // 0x0XXXXXXX, а при отрицательном - 0x8XXXXXXX.
+int get_exp(s21_decimal value);
+int get_sign(s21_decimal value);
 int setBit(int num, int pos);
 
 int clearBit(int num, int pos);
 
 int toggleBit(int num, int pos);
+
 #endif
