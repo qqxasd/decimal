@@ -14,6 +14,14 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 void equal_exponents(int exp1, int exp2, s21_decimal *value_to_increase);
+void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res);
+void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res, int *change_sign);
+void carry_value(s21_decimal *value, int bit_num_from);
+int cant_carry_bit(int num);
+void borrow_from_higher(s21_decimal *value, s21_decimal *base,
+                        int bit_num_from);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
