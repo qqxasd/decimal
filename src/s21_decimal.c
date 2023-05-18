@@ -1,19 +1,16 @@
 #include "s21_decimal.h"
 
 int main() {
-  s21_decimal decimal1, decimal2, result, result2;
-  decimal1 = (s21_decimal){{0x00000000, 0x0FFFFFFF, 0x7FFFFFFF, 0x00100000}};
-  decimal2 = (s21_decimal){{0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFF1, 0x00090000}};
-  int res = s21_add(decimal1, decimal2, &result);
-  printf("%d %d %d %d*10^(-%d)\n%d\n", get_sign(result), result.bits[2],
-         result.bits[1], result.bits[0], get_exp(result), res);
-  s21_sub(decimal1, decimal2, &result2);
-  printf("%d %d %d %d*10^(-%d)\n", get_sign(result2), result2.bits[2],
-         result2.bits[1], result2.bits[0], get_exp(result2));
-  return 0;
+  s21_decimal result;
+  s21_add((s21_decimal){{0x00000001, 0x60000001, 0x00000000, 0x800E0000}},
+          (s21_decimal){{0x00000004, 0x10000008, 0x00000000, 0x800F0000}},
+          &result);
+  printf("%d %d %d", result.bits[0], result.bits[1], result.bits[2]);
 }
 
 int setBit(int num, int pos) { return (num | (1 << pos)); }
+
+int getBit(int num, int pos) { return ((num & (1 << pos)) >> pos); }
 
 int clearBit(int num, int pos) { return (num & (~(1 << pos))); }
 
@@ -34,13 +31,17 @@ void equal_exponents(int exp_lower, int exp_higher,
                      s21_decimal *value_to_increase) {
   int diff = exp_higher - exp_lower;
   for (int i = 0; i < diff; i++) {
-    int tmp = (*value_to_increase).bits[0] * 10;
-    printf("%d\n", tmp / (*value_to_increase).bits[0]);
-    (*value_to_increase).bits[0] *= 10;
-    if ((*value_to_increase).bits[0] < 0) {
-      // to_lower_exponent();
+    s21_decimal tmp;
+    int flag = 0;
+    for (int i = 0; i < 10 && !flag; i++) {
+      if (s21_add(*value_to_increase, *value_to_increase, &tmp)) {
+        flag = 1;
+      }
     }
-    (*value_to_increase).bits[3] += 65536;
+    if (!flag) {
+      *value_to_increase = tmp;
+      (*value_to_increase).bits[3] += 65536;
+    }
   }
 }
 
@@ -50,137 +51,24 @@ void carry_value(s21_decimal *value, int bit_num_from) {
 }
 
 int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int res = 0;
-  int change_sign = 0;
-  int exp1 = get_exp(value_1);
-  int exp2 = get_exp(value_2);
-  int sign1 = get_sign(value_1);
-  int sign2 = get_sign(value_2);
-  if (exp1 > exp2) {
-    equal_exponents(exp2, exp1, &value_2);
-  } else if (exp2 > exp1) {
-    equal_exponents(exp1, exp2, &value_1);
+  *result = (s21_decimal){{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
+  for (int i = 0; i < 96; i++) {
+    int bit1 = getBit(value_1.bits[i / 32], i % 32);
+    int bit2 = getBit(value_2.bits[i / 32], i % 32);
+    if (bit1 | bit2) {
+      (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
+    } else {
+      (*result).bits[i / 32] = clearBit((*result).bits[i / 32], i % 32);
+    }
   }
-  if (sign1 == sign2) {
-    basic_add(value_1, value_2, result, &res);
-  }
-  if (sign1 > sign2) {
-    value_1.bits[3] = toggleBit(value_1.bits[3], 31);
-    basic_sub(value_2, value_1, result, &res, &change_sign);
-  }
-  if (sign2 > sign1) {
-    value_1.bits[3] = toggleBit(value_1.bits[3], 31);
-    basic_sub(value_1, value_2, result, &res, &change_sign);
-  }
-  if (change_sign) {
-    (*result).bits[3] = toggleBit((*result).bits[3], 31);
-  }
-  return res;
+  (*result).bits[3] = value_2.bits[3];
+  return 0;
 }
 
-int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
-  int res = 0;
-  int exp1 = get_exp(value_1);
-  int exp2 = get_exp(value_2);
-  int change_sign = 0;
-  if (exp1 > exp2) {
-    equal_exponents(exp2, exp1, &value_2);
-  } else if (exp2 > exp1) {
-    equal_exponents(exp1, exp2, &value_1);
-  }
-  basic_sub(value_1, value_2, result, &res, &change_sign);
-  if (change_sign) {
-    (*result).bits[3] = toggleBit((*result).bits[3], 31);
-  }
-  return res;
-}
+int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {}
 
 void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res) {
-  int carry_flag = 0;
-  (*result).bits[0] = value_1.bits[0] + value_2.bits[0];
-  if (value_1.bits[0] >= 0 && value_2.bits[0] >= 0 && (*result).bits[0] < 0) {
-    carry_flag = 1;
-    (*result).bits[0] = clearBit((*result).bits[0], 31);
-  }
-  (*result).bits[1] = value_1.bits[1] + value_2.bits[1] + carry_flag;
-  carry_flag = 0;
-  if (value_1.bits[1] >= 0 && value_2.bits[1] >= 0 && (*result).bits[1] < 0) {
-    carry_flag = 1;
-    (*result).bits[1] = clearBit((*result).bits[1], 31);
-  }
-  (*result).bits[2] = value_1.bits[2] + value_2.bits[2] + carry_flag;
-  carry_flag = 0;
-  if (value_1.bits[2] >= 0 && value_2.bits[2] >= 0 && (*result).bits[2] < 0) {
-    carry_flag = 1;
-    (*result).bits[2] = clearBit((*result).bits[2], 31);
-  }
-  (*result).bits[3] = value_1.bits[3] - carry_flag * 65536;
-  if (get_exp(*result) < 0) {
-    *res = 1;
-    (*result) = (s21_decimal){{0, 0, 0, 0}};
-  }
-}
+               int *res) {}
 
 void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res, int *change_sign) {
-  int carry_flag = 0;
-  int flag = 0;
-  (*result).bits[2] = value_1.bits[2] - value_2.bits[2];
-  if ((*result).bits[2] < 0) {
-    if (cant_carry_bit(value_1.bits[1])) {
-      if (cant_carry_bit(value_1.bits[0])) {
-        *change_sign = 1;
-        basic_sub(value_2, value_1, result, res, change_sign);
-        flag = 1;
-      } else {
-        carry_value(&value_1, 0);
-        carry_value(&value_1, 1);
-      }
-    } else {
-      carry_value(&value_1, 1);
-    }
-    (*result).bits[2] = value_1.bits[2] - value_2.bits[2];
-  }
-  if (!flag) {
-    (*result).bits[1] = value_1.bits[1] - value_2.bits[1];
-    if ((*result).bits[1] < 0) {
-      if ((*result).bits[2] > 0) {
-        while ((*result).bits[2] > 0 &&
-               ((*result).bits[1] = (value_1.bits[1] - value_2.bits[1])) < 0) {
-          borrow_from_higher(result, &value_1, 2);
-        }
-      } else {
-        if (cant_carry_bit(value_1.bits[0])) {
-          *change_sign = 1;
-          basic_sub(value_2, value_1, result, res, change_sign);
-          flag = 1;
-        } else {
-          carry_value(&value_1, 0);
-        }
-        (*result).bits[1] = value_1.bits[1] - value_2.bits[1];
-      }
-    }
-    if (!flag) {
-      (*result).bits[0] = value_1.bits[0] - value_2.bits[0];
-      if ((*result).bits[0] < 0) {
-        while (((*result).bits[0] = (value_1.bits[0] - value_2.bits[0])) < 0 &&
-               ((*result).bits[2] > 0 || (*result).bits[1] > 0)) {
-          if ((*result).bits[1] == 0 && (*result).bits[2] > 0) {
-            borrow_from_higher(result, result, 2);
-          }
-          borrow_from_higher(result, &value_1, 1);
-        }
-      }
-      if ((*result).bits[2] == 0 && (*result).bits[1] == 0) {
-        *change_sign = 1;
-        (*result).bits[0] = value_2.bits[0] - value_1.bits[0];
-      }
-      (*result).bits[3] = value_1.bits[3] + carry_flag * 65536;
-      if (get_exp(*result) < 0) {
-        *res = 1;
-        (*result) = (s21_decimal){{0, 0, 0, 0}};
-      }
-    }
-  }
-}
+               int *res, int *change_sign) {}

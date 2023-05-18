@@ -1,11 +1,10 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
 
-#include <check.h>
 #include <stdio.h>
 
 typedef struct {
-  int bits[4];
+  unsigned int bits[4];
 } s21_decimal;
 
 int s21_add(s21_decimal value_1, s21_decimal value_2,
@@ -22,6 +21,7 @@ void carry_value(s21_decimal *value, int bit_num_from);
 int cant_carry_bit(int num);
 void borrow_from_higher(s21_decimal *value, s21_decimal *base,
                         int bit_num_from);
+int getBit(int num, int pos);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
