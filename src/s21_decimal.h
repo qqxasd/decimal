@@ -4,6 +4,11 @@
 #include <check.h>
 #include <stdio.h>
 
+#define START_LOW_BIT 0
+#define START_MID_BIT 32
+#define START_HIGHT_BIT 64
+#define START_SERVICE_BIT 96
+
 typedef struct {
   int bits[4];
 } s21_decimal;
@@ -22,6 +27,9 @@ int s21_is_greater(s21_decimal, s21_decimal);           //
 int s21_is_greater_or_equal(s21_decimal, s21_decimal);  //
 int s21_is_equal(s21_decimal, s21_decimal);             //
 int s21_is_not_equal(s21_decimal, s21_decimal);         //
+
+int get_bit(s21_decimal value, int index);
+int is_zero(s21_decimal value);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
