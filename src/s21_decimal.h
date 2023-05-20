@@ -16,9 +16,10 @@ void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
 void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                int *res);
 void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res, int *change_sign);
+               int *res);
 int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
+void decrease_exponent(s21_decimal *value);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
