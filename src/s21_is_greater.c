@@ -1,15 +1,16 @@
 #include "s21_decimal.h"
 
 typedef struct {
-  int bits[6];
-  int exp;
+  unsigned int bits[6];
+  unsigned int exp;  // А оно нам надо ?????
 } s21_big_decimal;
 
 int get_bit(unsigned int source, unsigned int position) {
   return (source & (1 << position));
 }
 
-void set_bit(unsigned int *destination, unsigned int position, int value) {
+void set_bit(unsigned int *destination, unsigned int position,
+             unsigned int value) {
   if (value)
     *destination |= (1 << position);
   else
@@ -27,8 +28,9 @@ void to_big(s21_decimal from, s21_big_decimal *to) {
   to->bits[3] = 0;
   to->bits[4] = 0;
   to->bits[5] = 0;
-  to->exp = s21_get_exp(from);
+  to->exp = get_exp(from);
 }
+
 void shift_right(s21_decimal *value) {
   int store_bit = 0;
   for (int i = 2; i >= 0; i--) {
@@ -41,8 +43,9 @@ void shift_right(s21_decimal *value) {
 
 void shift_big_left(s21_big_decimal *value) {
   int store_bit = 0;
+  int new_bit = 0;
   for (int i = 0; i < 6; i++) {
-    int new_bit = get_bit(value->bits[i], 31);
+    new_bit = get_bit(value->bits[i], 31);
     value->bits[i] = value->bits[i] << 1;
     set_bit(&(value->bits[i]), 0, store_bit);
     store_bit = new_bit;
@@ -68,11 +71,11 @@ int s21_mul10_big(s21_big_decimal *src) {
   s21_decimal value_2 = {{10, 0, 0, 0}};
   int check = 0;
   s21_big_decimal tmp_1 = *src;
-  while (!is_null(value_2) && !check) {
+  while (!is_zero(value_2) && !check) {
     if (get_bit(value_2.bits[0], 0)) check = add_for_mul(res, tmp_1, &res);
-    left_shift_big(&tmp_1);
+    shift_big_left(&tmp_1);
     if (get_bit(res.bits[5], 31)) check = 1;
-    right_shift(&value_2);
+    shift_right(&value_2);
   }
   res.exp = src->exp;
   *src = res;
@@ -98,36 +101,51 @@ int s21_normalize_big(s21_big_decimal *x1, s21_big_decimal *x2) {
   return check;
 }
 
-int s21_is_greater(s21_decimal a, s21_decimal b) {
-  s21_big_decimal a_big, b_big;
+int s21_is_equal(s21_decimal value_1, s21_decimal value_2) {
+  if (value_1.bits[0] == value_2.bits[0] &&
+      value_1.bits[1] == value_2.bits[1] &&
+      value_1.bits[2] == value_2.bits[2] &&
+      get_sign(value_1) == get_sign(value_2) &&
+      get_exp(value_1) == get_exp(value_2))
+    return 1;
+  else
+    return 0;
+}
 
-  to_big(a, &a_big);
-  to_big(b, &b_big);
+int s21_is_not_equal(s21_decimal value_1, s21_decimal value_2) {
+  return !s21_is_equal(value_1, value_2);
+}
 
-  s21_normalize_big(&a_big, &b_big);
+int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
+  s21_big_decimal value_1_big, value_2_big;
+
+  to_big(value_1, &value_1_big);
+  to_big(value_2, &value_2_big);
+
+  s21_normalize_big(&value_1_big, &value_2_big);
 
   int res = 0;
-  if (is_zero(a, b)) {
+  if (is_zero(value_1) && is_zero(value_2)) {
     res = 0;
-  } else if (s21_get_sign(a) < s21_get_sign(b)) {
+  } else if (get_sign(value_1) < get_sign(value_2)) {
     res = 1;
-  } else if (s21_get_sign(a) > s21_get_sign(b)) {
+  } else if (get_sign(value_1) > get_sign(value_2)) {
     res = 0;
-  } else if (s21_is_equal(a, b)) {
+  } else if (s21_is_equal(value_1, value_2)) {
     res = 0;
   } else {
     for (int i = 191; i >= 0; i--) {
-      if (get_bit(a_big.bits[i / 32], i % 32) >
-          get_bit(b_big.bits[i / 32], i % 32)) {
+      if (get_bit(value_1_big.bits[i / 32], i % 32) >
+          get_bit(value_2_big.bits[i / 32], i % 32)) {
         res = 1;
         break;
-      } else if (get_bit(a_big.bits[i / 32], i % 32) <
-                 get_bit(b_big.bits[i / 32], i % 32)) {
+      } else if (get_bit(value_1_big.bits[i / 32], i % 32) <
+                 get_bit(value_2_big.bits[i / 32], i % 32)) {
         res = 0;
         break;
       }
     }
-    if (s21_get_sign(a) && s21_get_sign(b)) res = res ? 0 : 1;
+    if (get_sign(value_1) && get_sign(value_2)) res = res ? 0 : 1;
   }
   return res;
 }

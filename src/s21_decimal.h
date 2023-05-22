@@ -1,16 +1,10 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
 
-#include <check.h>
 #include <stdio.h>
 
-#define START_LOW_BIT 0
-#define START_MID_BIT 32
-#define START_HIGHT_BIT 64
-#define START_SERVICE_BIT 96
-
 typedef struct {
-  int bits[4];
+  unsigned int bits[4];
 } s21_decimal;
 
 int s21_add(s21_decimal value_1, s21_decimal value_2,
@@ -18,7 +12,15 @@ int s21_add(s21_decimal value_1, s21_decimal value_2,
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
-
+void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
+void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res);
+void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res);
+int getBit(unsigned int num, int pos);
+int increase_exponent(s21_decimal *value);
+void decrease_exponent(s21_decimal *value);
+void shift_decimal(s21_decimal *value, int shift);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
@@ -27,9 +29,6 @@ int s21_is_greater(s21_decimal, s21_decimal);           //
 int s21_is_greater_or_equal(s21_decimal, s21_decimal);  //
 int s21_is_equal(s21_decimal, s21_decimal);             //
 int s21_is_not_equal(s21_decimal, s21_decimal);         //
-
-int s21_get_bit(s21_decimal value, int index);
-int s21_is_zero(s21_decimal value);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,19 +51,12 @@ int s21_negate(s21_decimal value, s21_decimal *result);  // )))))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int s21_get_exp(
-    s21_decimal value);  // при записи в виде шестнадцатеричного числа за
-                         // экспоненту отвечает 3 и 4 цифры, т.е 0x00XX0000. При
-                         // этом значения могут варьироваться от 0 до 28, т.е.
-                         // от 0x00000000 до 0x001С0000
-int s21_get_sign(
-    s21_decimal value);  // при записи в виде шестнадцатеричного числа при
-                         // положительном знаке первое число будет 0, т.е
-                         // 0x0XXXXXXX, а при отрицательном - 0x8XXXXXXX.
-int s21_setBit(int num, int pos);
-int s21_clearBit(int num, int pos);
-int s21_toggleBit(int num, int pos);
-int s21_is_zero(s21_decimal value);
-int s21_get_bit(s21_decimal value, int index);
+int get_exp(s21_decimal value);
+int get_sign(s21_decimal value);
+int setBit(unsigned int num, int pos);
+
+int clearBit(unsigned int num, int pos);
+
+int toggleBit(unsigned int num, int pos);
 
 #endif
