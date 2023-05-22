@@ -2,46 +2,44 @@
 
 ## Variables Block
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra -std=c11
-LIBS = -lm -lpthread -lcheck
+CCFLAGS = -Werror -Wall -Wextra -std=c11
+COVERAGE = 
+LIBS = -lpthread -lcheck -lm
 LEAK = -fsanitize=leak -fsanitize=address -fsanitize=undefined -fsanitize=unreachable -fno-sanitize-recover -fstack-protector -fanalyzer
 
-
-TARGET = s21_decimal.a
 SOURCES = $(wildcard s21_*.c)
 OBJECTS = $(patsubst %.c,%.o,$(SOURCES))
+
 TESTS_DIR = tests/
 TESTS_SRC = $(wildcard $(TESTS_DIR)*.c)
-TESTS_OBJ = $(patsubst %.c,%.o,$(nodir $(TESTS_SRC)))
+TESTS_OBJ = $(patsubst %.c,%.o,$(notdir $(TESTS_SRC)))
+
+TARGET = s21_decimal.a
 
 ifeq ($(shell uname -s), Linux)
-	LFLAGS = -lm -lpthread -lcheck -lsubunit
+	LIBS = -lpthread -lcheck -lsubunit -lm
 endif
 
 ## Application Block
 .PHONY: all clean test gcov_report
 
-all: test ##gcov_report
+all: gcov_report
 
 clean:
 	rm -rf *.o gcov_report *.a *.gcda *.gcno test.info
 
-$(TARGET):
-	echo $(TESTS_DIR) $(TESTS_SRC)
-	$(CC) $(CFLAGS) -c $(SOURCES)
+$(TARGET): clean
+	@echo $(TESTS_DIR) $(TESTS_SRC)
+	$(CC) $(CCFLAGS) -c $(SOURCES)
 	ar rc $@ $(OBJECTS)
 	ranlib $@
 
-test: clean $(TARGET)
-	@echo "------------------------------"
-	@echo $(TESTS_SRC)
-	@echo "------------------------------"
-	$(CC) $(CFLAGS) -c $(TESTS_SRC)
-	$(CC) $@.o $(LFLAGS) $(TARGET) -o $@
+test: $(TARGET)
+	$(CC) $(CCFLAGS) $(COVERAGE) -c $(TESTS_SRC)
+	$(CC) $(CCFLAGS) $(COVERAGE) $(TESTS_OBJ) $(LIBS) $(TARGET) -o $@
 	rm -rf $@.o
-	./$@
 
-gcov_report: clean add_coverage test
+gcov_report: add_coverage test
 	./test
 	lcov -t "test" -o test.info -c -d .
 	genhtml -o report test.info
@@ -50,8 +48,7 @@ ifeq ($(shell uname -s), Macosx)
 endif
 
 add_coverage:
-	$(eval CFLAGS += --coverage)
-
+	$(eval COVERAGE += --coverage)
 
 ## Check Block
 .PHONY: check clang cppcheck cpplint leaks leaks_debug gcc_leaks
@@ -84,7 +81,7 @@ leaks_debug: ## If a leak is detected !!!
 
 ## https://github.com/google/sanitizers/wiki/AddressSanitizerComparisonOfMemoryTools
 gcc_leaks: clean
-	$(CC) $(CFLAGS) -c $(C_FILE)
+	$(CC) $(CCFLAGS) -c $(C_FILE)
 	-ggdb -g -fsanitize=leak -fsanitize=address -fsanitize=undefined \
 	-fsanitize=unreachable -fno-sanitize-recover -fstack-protector -fanalyzer \
 	
