@@ -41,7 +41,7 @@ void shift_right(s21_decimal *value) {
   }
 }
 
-void shift_big_left(s21_big_decimal *value) {
+void shift_big_decimal_left(s21_big_decimal *value) {
   int store_bit = 0;
   int new_bit = 0;
   for (int i = 0; i < 6; i++) {
@@ -73,7 +73,7 @@ int multiply_10_big(s21_big_decimal *src) {
   s21_big_decimal tmp_1 = *src;
   while (!is_zero(value_2) && !check) {
     if (get_bit(value_2.bits[0], 0)) check = add_for_multiply(res, tmp_1, &res);
-    shift_big_left(&tmp_1);
+    shift_big_decimal_left(&tmp_1);
     if (get_bit(res.bits[5], 31)) check = 1;
     shift_right(&value_2);
   }

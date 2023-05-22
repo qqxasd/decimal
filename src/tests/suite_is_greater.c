@@ -12,9 +12,8 @@ END_TEST
 START_TEST(s21_is_greater_test_2a) {
   s21_decimal a = {{S21_MAX_U_INT, 0, 0, 0}};
   s21_decimal b = {{0, 0, 0, 0}};
-  printf("\n***\n%i, %i, %i, %i\n%i, %i, %i, %i\n***\n", a.bits[0], a.bits[1],
+  printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[0], a.bits[1],
          a.bits[2], a.bits[3], b.bits[0], b.bits[1], b.bits[2], b.bits[3]);
-
   ck_assert_int_eq(s21_is_greater(a, b), S21_TRUE);
 }
 END_TEST
