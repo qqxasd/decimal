@@ -12,9 +12,23 @@
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
 int getBit(unsigned int num, int pos) { return ((num & (1 << pos)) >> pos); }
+// int main() {
+//   s21_decimal result;
+//   s21_add((s21_decimal){{0x14490831, 0x00048E23, 0x00000000, 0x00070000}},
+//           (s21_decimal){{0x164214B7, 0x00000028, 0x00000000, 0x00040000}},
+//           &result);
+//   printf("%d %d %d %d\n", result.bits[0], result.bits[1], result.bits[2],
+//          get_exp(result));
+// }
+
+int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
+
+int getBit(unsigned int num, int pos) { return ((num & (1 << pos)) >> pos); }
 
 int clearBit(unsigned int num, int pos) { return (num & (~(1 << pos))); }
+int clearBit(unsigned int num, int pos) { return (num & (~(1 << pos))); }
 
+int toggleBit(unsigned int num, int pos) { return (num ^ (1 << pos)); }
 int toggleBit(unsigned int num, int pos) { return (num ^ (1 << pos)); }
 
 int get_exp(s21_decimal value) { return (value.bits[3] << 10) >> 26; }

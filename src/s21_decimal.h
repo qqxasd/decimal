@@ -5,6 +5,7 @@
 
 typedef struct {
   unsigned int bits[4];
+  unsigned int bits[4];
 } s21_decimal;
 
 int s21_add(s21_decimal value_1, s21_decimal value_2,
@@ -12,6 +13,15 @@ int s21_add(s21_decimal value_1, s21_decimal value_2,
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
+void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
+void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res);
+void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+               int *res);
+int getBit(unsigned int num, int pos);
+int increase_exponent(s21_decimal *value);
+void decrease_exponent(s21_decimal *value);
+void shift_decimal(s21_decimal *value, int shift);
 void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
 void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                int *res);
@@ -56,7 +66,13 @@ int get_sign(s21_decimal value);
 int setBit(unsigned int num, int pos);
 
 int clearBit(unsigned int num, int pos);
+int get_exp(s21_decimal value);
+int get_sign(s21_decimal value);
+int setBit(unsigned int num, int pos);
 
+int clearBit(unsigned int num, int pos);
+
+int toggleBit(unsigned int num, int pos);
 int toggleBit(unsigned int num, int pos);
 
 #endif
