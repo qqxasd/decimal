@@ -32,6 +32,8 @@ void decimal_to_big_decimal(s21_decimal from, s21_big_decimal *to) {
 }
 
 void shift_right(s21_decimal *value) {
+  printf("\n***%u, %u, %u, %u***\n", *value.bits[0], value.bits[1],
+         value.bits[2]);
   int store_bit = 0;
   for (int i = 2; i >= 0; i--) {
     int new_bit = get_bit(value->bits[i], 0);
@@ -39,6 +41,9 @@ void shift_right(s21_decimal *value) {
     set_bit(&(value->bits[i]), 31, store_bit);
     store_bit = new_bit;
   }
+  printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", value.bits[0],
+         value.bits[1], value.bits[2], value.bits[3], b.bits[0], b.bits[1],
+         b.bits[2], b.bits[3]);
 }
 
 void shift_big_decimal_left(s21_big_decimal *value) {
