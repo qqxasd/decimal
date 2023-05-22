@@ -52,14 +52,14 @@ void shift_big_decimal_left(s21_big_decimal *value) {
   }
 }
 
-int add_for_multiply(s21_big_decimal res_value, s21_big_decimal value_1,
-                     s21_big_decimal *res) {
+int add_for_multiply(s21_big_decimal value_1, s21_big_decimal value_2,
+                     s21_big_decimal *result) {
   int check = 0;
   int store_bit = 0;
   for (int i = 0; i < 192; i++) {
-    int a = get_bit(value_1.bits[i / 32], i % 32);
-    int b = get_bit(res_value.bits[i / 32], i % 32);
-    set_bit(&(res->bits[i / 32]), i % 32, a ^ b ^ store_bit);
+    int a = get_bit(value_2.bits[i / 32], i % 32);
+    int b = get_bit(value_1.bits[i / 32], i % 32);
+    set_bit(&(result->bits[i / 32]), i % 32, a ^ b ^ store_bit);
     store_bit = (a && b) || (b && store_bit) || (a && store_bit);
   }
   if (store_bit) check = 1;
@@ -67,18 +67,19 @@ int add_for_multiply(s21_big_decimal res_value, s21_big_decimal value_1,
 }
 
 int multiply_10_big(s21_big_decimal *src) {
-  s21_big_decimal res = {{0}, 0};
+  s21_big_decimal result = {{0}, 0};
   s21_decimal value_2 = {{10, 0, 0, 0}};
   int check = 0;
   s21_big_decimal tmp_1 = *src;
   while (!is_zero(value_2) && !check) {
-    if (get_bit(value_2.bits[0], 0)) check = add_for_multiply(res, tmp_1, &res);
+    if (get_bit(value_2.bits[0], 0))
+      check = add_for_multiply(result, tmp_1, &result);
     shift_big_decimal_left(&tmp_1);
-    if (get_bit(res.bits[5], 31)) check = 1;
+    if (get_bit(result.bits[5], 31)) check = 1;
     shift_right(&value_2);
   }
-  res.exp = src->exp;
-  *src = res;
+  result.exp = src->exp;
+  *src = result;
   return check;
 }
 
