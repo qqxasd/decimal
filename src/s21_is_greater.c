@@ -5,8 +5,22 @@ typedef struct {
   unsigned int exp;  // А оно нам надо ?????
 } s21_big_decimal;
 
-int get_bit(unsigned int source, unsigned int position) {
-  return (source & (1 << position));
+void printBits(size_t const size, void const *const ptr) {
+  unsigned char *b = (unsigned char *)ptr;
+  unsigned char byte;
+  int i, j;
+
+  for (i = size - 1; i >= 0; i--) {
+    for (j = 7; j >= 0; j--) {
+      byte = (b[i] >> j) & 1;
+      printf("%u", byte);
+    }
+  }
+  printf("\n");
+}
+
+int get_bit(unsigned int num, unsigned int pos) {
+  return ((num & (1 << pos)) >> pos);
 }
 
 void set_bit(unsigned int *destination, unsigned int position,
@@ -32,8 +46,6 @@ void decimal_to_big_decimal(s21_decimal from, s21_big_decimal *to) {
 }
 
 void shift_right(s21_decimal *value) {
-  printf("\n***%u, %u, %u, %u***\n", *value.bits[0], value.bits[1],
-         value.bits[2]);
   int store_bit = 0;
   for (int i = 2; i >= 0; i--) {
     int new_bit = get_bit(value->bits[i], 0);
@@ -41,12 +53,13 @@ void shift_right(s21_decimal *value) {
     set_bit(&(value->bits[i]), 31, store_bit);
     store_bit = new_bit;
   }
-  printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", value.bits[0],
-         value.bits[1], value.bits[2], value.bits[3], b.bits[0], b.bits[1],
-         b.bits[2], b.bits[3]);
 }
 
 void shift_big_decimal_left(s21_big_decimal *value) {
+  // printf("***\n");
+  // for (size_t i = 0; i < 3; i++) {
+  //   printBits(sizeof(int), &value->bits[i]);
+  // }
   int store_bit = 0;
   int new_bit = 0;
   for (int i = 0; i < 6; i++) {
@@ -55,6 +68,10 @@ void shift_big_decimal_left(s21_big_decimal *value) {
     set_bit(&(value->bits[i]), 0, store_bit);
     store_bit = new_bit;
   }
+  // for (size_t i = 0; i < 3; i++) {
+  //   printBits(sizeof(int), &value->bits[i]);
+  // }
+  // printf("***\n");
 }
 
 int add_for_multiply(s21_big_decimal value_1, s21_big_decimal value_2,

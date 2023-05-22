@@ -2,6 +2,26 @@
 
 #include "unit_tests.h"
 
+START_TEST(s21_is_greater_test) {
+  s21_decimal a, b;
+
+  a.bits[0] = 0b00000000000000000000000000000010;
+  a.bits[1] = 0b00000000000000000000000000000000;
+  a.bits[2] = 0b00000000000000000000000000000000;
+  a.bits[3] = 0b00000000000000000000000000000000;
+  b.bits[0] = 0b00000000000000000000000000000011;
+  b.bits[1] = 0b00000000000000000000000000000000;
+  b.bits[2] = 0b00000000000000000000000000000000;
+  b.bits[3] = 0b00000000000000000000000000000000;
+  ck_assert_int_eq(s21_is_greater(a, b), S21_FALSE);
+
+  s21_decimal dec5 = {{12345, 0, 0, 0b00000000000001000000000000000000}};
+  s21_decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};
+  ck_assert_int_eq(s21_is_greater(dec5, dec6), 1);
+  ck_assert_int_eq(s21_is_greater(dec6, dec5), 0);
+}
+END_TEST
+
 START_TEST(s21_is_greater_test_1a) {
   s21_decimal a = {{2, 0, 0, 0}};
   s21_decimal b = {{1, 0, 0, 0}};
@@ -12,8 +32,8 @@ END_TEST
 START_TEST(s21_is_greater_test_2a) {
   s21_decimal a = {{S21_MAX_U_INT, 0, 0, 0}};
   s21_decimal b = {{0, 0, 0, 0}};
-  printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[0], a.bits[1],
-         a.bits[2], a.bits[3], b.bits[0], b.bits[1], b.bits[2], b.bits[3]);
+  // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[0], a.bits[1],
+  //        a.bits[2], a.bits[3], b.bits[0], b.bits[1], b.bits[2], b.bits[3]);
   ck_assert_int_eq(s21_is_greater(a, b), S21_TRUE);
 }
 END_TEST
@@ -852,7 +872,8 @@ START_TEST(s21_is_greater_test_31) {
   int origin = 0;
   // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[3],
   // a.bits[2],
-  //        a.bits[1], a.bits[0], b.bits[3], b.bits[2], b.bits[1], b.bits[0]);
+  //        a.bits[1], a.bits[0], b.bits[3], b.bits[2], b.bits[1],
+  // b.bits[0]);
 
   ck_assert_int_eq(result, origin);
 }
@@ -916,7 +937,8 @@ START_TEST(s21_is_greater_test_34) {
   int origin = 1;
   // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[3],
   // a.bits[2],
-  //        a.bits[1], a.bits[0], b.bits[3], b.bits[2], b.bits[1], b.bits[0]);
+  //        a.bits[1], a.bits[0], b.bits[3], b.bits[2], b.bits[1],
+  // b.bits[0]);
 
   ck_assert_int_eq(result, origin);
 }
@@ -965,6 +987,8 @@ END_TEST
 Suite *suite_is_greater(void) {
   Suite *suite = suite_create("is_greater");
   TCase *testcase = tcase_create("case_is_greater");
+
+  tcase_add_test(testcase, s21_is_greater_test);
 
   tcase_add_test(testcase, s21_is_greater_test_1a);
   tcase_add_test(testcase, s21_is_greater_test_2a);
