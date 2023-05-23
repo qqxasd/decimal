@@ -19,10 +19,6 @@ void printBits(size_t const size, void const *const ptr) {
   printf("\n");
 }
 
-int get_bit(unsigned int num, unsigned int pos) {
-  return ((num & (1 << pos)) >> pos);
-}
-
 void set_bit(unsigned int *destination, unsigned int position,
              unsigned int value) {
   if (value)
@@ -48,7 +44,7 @@ void decimal_to_big_decimal(s21_decimal from, s21_big_decimal *to) {
 void shift_right(s21_decimal *value) {
   int store_bit = 0;
   for (int i = 2; i >= 0; i--) {
-    int new_bit = get_bit(value->bits[i], 0);
+    int new_bit = getBit(value->bits[i], 0);
     value->bits[i] = value->bits[i] >> 1;
     set_bit(&(value->bits[i]), 31, store_bit);
     store_bit = new_bit;
@@ -56,22 +52,14 @@ void shift_right(s21_decimal *value) {
 }
 
 void shift_big_decimal_left(s21_big_decimal *value) {
-  // printf("***\n");
-  // for (size_t i = 0; i < 3; i++) {
-  //   printBits(sizeof(int), &value->bits[i]);
-  // }
   int store_bit = 0;
   int new_bit = 0;
   for (int i = 0; i < 6; i++) {
-    new_bit = get_bit(value->bits[i], 31);
+    new_bit = getBit(value->bits[i], 31);
     value->bits[i] = value->bits[i] << 1;
     set_bit(&(value->bits[i]), 0, store_bit);
     store_bit = new_bit;
   }
-  // for (size_t i = 0; i < 3; i++) {
-  //   printBits(sizeof(int), &value->bits[i]);
-  // }
-  // printf("***\n");
 }
 
 int add_for_multiply(s21_big_decimal value_1, s21_big_decimal value_2,
@@ -79,8 +67,8 @@ int add_for_multiply(s21_big_decimal value_1, s21_big_decimal value_2,
   int check = 0;
   int store_bit = 0;
   for (int i = 0; i < 192; i++) {
-    int a = get_bit(value_2.bits[i / 32], i % 32);
-    int b = get_bit(value_1.bits[i / 32], i % 32);
+    int a = getBit(value_2.bits[i / 32], i % 32);
+    int b = getBit(value_1.bits[i / 32], i % 32);
     set_bit(&(result->bits[i / 32]), i % 32, a ^ b ^ store_bit);
     store_bit = (a && b) || (b && store_bit) || (a && store_bit);
   }
@@ -94,10 +82,10 @@ int multiply_10_big(s21_big_decimal *src) {
   int check = 0;
   s21_big_decimal tmp_1 = *src;
   while (!is_zero(value_2) && !check) {
-    if (get_bit(value_2.bits[0], 0))
+    if (getBit(value_2.bits[0], 0))
       check = add_for_multiply(result, tmp_1, &result);
     shift_big_decimal_left(&tmp_1);
-    if (get_bit(result.bits[5], 31)) check = 1;
+    if (getBit(result.bits[5], 31)) check = 1;
     shift_right(&value_2);
   }
   result.exp = src->exp;
@@ -158,12 +146,12 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
     res = 0;
   } else {
     for (int i = 191; i >= 0; i--) {
-      if (get_bit(value_1_big.bits[i / 32], i % 32) >
-          get_bit(value_2_big.bits[i / 32], i % 32)) {
+      if (getBit(value_1_big.bits[i / 32], i % 32) >
+          getBit(value_2_big.bits[i / 32], i % 32)) {
         res = 1;
         break;
-      } else if (get_bit(value_1_big.bits[i / 32], i % 32) <
-                 get_bit(value_2_big.bits[i / 32], i % 32)) {
+      } else if (getBit(value_1_big.bits[i / 32], i % 32) <
+                 getBit(value_2_big.bits[i / 32], i % 32)) {
         res = 0;
         break;
       }
