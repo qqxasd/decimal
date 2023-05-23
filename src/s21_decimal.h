@@ -7,19 +7,6 @@ typedef struct {
   unsigned int bits[4];
 } s21_decimal;
 
-typedef struct {
-  struct s21_decimal divided_by_2_little;
-  struct s21_decimal divided_by_2_big;
-  struct s21_decimal divided_by_8_little;
-  struct s21_decimal divided_by_8_big;
-  struct s21_decimal divided_by_4_little;
-  struct s21_decimal divided_by_4_big;
-  struct s21_decimal divided_by_128_little_mult_by_4;
-  struct s21_decimal divided_by_128_big_mult_by_4;
-  struct s21_decimal divided_by_128_little_mult_by_2;
-  struct s21_decimal divided_by_128_big_mult_by_2;
-} divisions;
-
 int s21_add(s21_decimal value_1, s21_decimal value_2,
             s21_decimal *result);  // арифмтеичексие операции Никита (Кайфует)
 int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
@@ -33,11 +20,10 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
 void decrease_exponent(s21_decimal *value);
-void shift_decimal(s21_decimal *value, int shift);
-int normalize_long_decimal(s21_decimal little, s21_decimal big,
-                           s21_decimal *result);
-void div_long(s21_decimal *little, s21_decimal *big);
-void define_divisions(s21_decimal little, s21_decimal big, divisions *div);
+// void shift_decimal(s21_decimal *value, int shift);
+// int normalize_long_decimal(s21_decimal little, s21_decimal big,
+//                            s21_decimal *result);
+// void div_long(s21_decimal *little, s21_decimal *big);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )

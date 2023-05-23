@@ -217,29 +217,27 @@ void shift_decimal(s21_decimal *value, int shift) {
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int res = 0;
-  *result =
-      (s21_decimal){{0, 0, 0,
-                     (getBit(get_sign(value_1) + get_sign(value_2), 0)) << 31 |
-                         (get_exp(value_1) - get_exp(value_2)) << 16}};
+  *result = (s21_decimal){{0, 0, 0, 0}};
+  int cur_sgn = getBit(get_sign(value_1) + get_sign(value_2), 0);
+  int cur_exp = get_exp(value_1) - get_exp(value_2);
   int q = 0;
+  value_1.bits[3] = 0;
+  value_2.bits[3] = 0;
   s21_decimal tmp = (s21_decimal){{0, 0, 0, 0}};
   while (s21_is_greater_or_equal(value_1, value_2)) {
     s21_decimal value_to_sub = value_2;
     while (s21_is_greater_or_equal(value_1, value_to_sub)) {  // b*2^q<=a
       for (int i = 0; i < q; i++) {
-        basic_sub(value_2, value_1, result, &res);
-        tmp.bits[0] = tmp.bits[0] | 1 << 2;
-        s21_mul(value_to_sub, tmp, &value_to_sub);
-        tmp.bits[0] = tmp.bits[0] >> 2;
+        s21_mul(value_to_sub, (s21_decimal){{2, 0, 0, 0}}, &tmp);
       }
       q++;
     }
-    tmp.bits[q / 32] = tmp.bits[q / 32] | (1 << ((q - 1) % 32));
     s21_add(*result, tmp, result);
     tmp.bits[q / 32] >> ((q - 1) % 32);
     q = 0;
     s21_sub(value_1, value_to_sub, &value_1);
   }
+  result->bits[3] |= (cur_sgn << 31 | cur_exp << 16);
   return res;
 }
 
@@ -256,92 +254,31 @@ int normalize_long_decimal(s21_decimal little, s21_decimal big,
   return res;
 }
 
-void div_long(s21_decimal *little, s21_decimal *big) {  // divides only by 10
-  divisions div = {{{0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0}}};
-  s21_decimal one = (s21_decimal){{1, 0, 0, 0}};
-  define_divisions(*little, *big, &div);
-  basic_sub(*big, div.divided_by_2_big, big, 0);
-  if (s21_is_less(*little, div.divided_by_2_little)) {
-    basic_sub(*big, one, big, 0);
-    basic_add(*little, (s21_decimal){{1 << 31, 0, 0, little->bits[3]}}, little,
-              0);
-  }  // x/10 = x - x/2 - x/4 - x/8 - (x/2^7)*4 - (x/2^7)*2
-  basic_sub(*little, div.divided_by_2_little, little, 0);
-  basic_sub(*big, div.divided_by_4_big, big, 0);
-  if (s21_is_less(*little, div.divided_by_4_little)) {
-    basic_sub(*big, one, big, 0);
-    basic_add(*little, (s21_decimal){{1 << 31, 0, 0, little->bits[3]}}, little,
-              0);
-  }
-  basic_sub(*little, div.divided_by_4_little, little, 0);
-  basic_sub(*big, div.divided_by_8_big, big, 0);
-  if (s21_is_less(*little, div.divided_by_8_little)) {
-    basic_sub(*big, one, big, 0);
-    basic_add(*little, (s21_decimal){{1 << 31, 0, 0, little->bits[3]}}, little,
-              0);
-  }
-  basic_sub(*little, div.divided_by_8_little, little, 0);
-  basic_sub(*big, div.divided_by_128_big_mult_by_4, big, 0);
-  if (s21_is_less(*little, div.divided_by_128_little_mult_by_4)) {
-    basic_sub(*big, one, big, 0);
-    basic_add(*little, (s21_decimal){{1 << 31, 0, 0, little->bits[3]}}, little,
-              0);
-  }
-  basic_sub(*little, div.divided_by_128_little_mult_by_4, little, 0);
-  basic_sub(*big, div.divided_by_128_big_mult_by_2, big, 0);
-  if (s21_is_less(*little, div.divided_by_128_little_mult_by_2)) {
-    basic_sub(*big, one, big, 0);
-    basic_add(*little, (s21_decimal){{1 << 31, 0, 0, little->bits[3]}}, little,
-              0);
-  }
-  basic_sub(*little, div.divided_by_128_little_mult_by_2, little, 0);
-}
-
-void define_divisions(s21_decimal little, s21_decimal big, divisions *div) {
-  div->divided_by_2_little =
-      (s21_decimal){{little.bits[0] >> 1 | (little.bits[1] & 1) << 31,
-                     little.bits[1] >> 1 | (little.bits[2] & 1) << 31,
-                     little.bits[2] >> 1 | (big.bits[1] & 1)}};
-  div->divided_by_2_big = (s21_decimal){
-      {big.bits[0] >> 1 | (big.bits[1] & 1) << 31,
-       big.bits[1] >> 1 | (big.bits[2] & 1) << 31, big.bits[2] >> 1}};
-  div->divided_by_8_little =
-      (s21_decimal){{little.bits[0] >> 3 | (little.bits[1] & 7) << 29,
-                     little.bits[1] >> 3 | (little.bits[2] & 7) << 29,
-                     little.bits[2] >> 3 | (big.bits[1] & 7) << 29}};
-  div->divided_by_8_big = (s21_decimal){
-      {big.bits[0] >> 3 | (big.bits[1] & 7) << 29,
-       big.bits[1] >> 3 | (big.bits[2] & 7) << 29, big.bits[2] >> 3}};
-  div->divided_by_4_little =
-      (s21_decimal){{little.bits[0] >> 2 | (little.bits[1] & 3) << 30,
-                     little.bits[1] >> 2 | (little.bits[2] & 3) << 30,
-                     little.bits[2] >> 2 | (big.bits[1] & 3) << 30}};
-  div->divided_by_4_big = (s21_decimal){
-      {big.bits[0] >> 2 | (big.bits[1] & 3) << 30,
-       big.bits[1] >> 2 | (big.bits[2] & 3) << 30, big.bits[2] >> 2}};
-  div->divided_by_128_little_mult_by_4 =
-      (s21_decimal){{little.bits[0] >> 7 << 2 | (little.bits[1] & 127) << 25,
-                     little.bits[1] >> 7 << 2 | (little.bits[2] & 127) << 25,
-                     little.bits[2] >> 7 << 2 | (big.bits[1] & 127) << 25}};
-  div->divided_by_128_big_mult_by_4 =
-      (s21_decimal){{big.bits[0] >> 7 << 2 | (big.bits[1] & 127) << 25,
-                     big.bits[1] >> 7 << 2 | (big.bits[2] & 127) << 25,
-                     big.bits[2] >> 7 << 2}};
-  div->divided_by_128_little_mult_by_2 =
-      (s21_decimal){{little.bits[0] >> 7 << 1 | (little.bits[1] & 127) << 25,
-                     little.bits[1] >> 7 << 1 | (little.bits[2] & 127) << 25,
-                     little.bits[2] >> 7 << 1 | (big.bits[1] & 127) << 25}};
-  div->divided_by_128_big_mult_by_2 =
-      (s21_decimal){{big.bits[0] >> 7 << 1 | (big.bits[1] & 127) << 25,
-                     big.bits[1] >> 7 << 1 | (big.bits[2] & 127) << 25,
-                     big.bits[2] >> 7 << 1}};
-}
+// void div_long(s21_decimal *little, s21_decimal *big) {  // divides only by 10
+//   int res = 0;
+//   *result =
+//       (s21_decimal){{0, 0, 0,
+//                      (getBit(get_sign(value_1) + get_sign(value_2), 0)) << 31
+//                      |
+//                          (get_exp(value_1) - get_exp(value_2)) << 16}};
+//   int q = 0;
+//   s21_decimal tmp = (s21_decimal){{0, 0, 0, 0}};
+//   while (s21_is_greater_or_equal(value_1, value_2)) {
+//     s21_decimal value_to_sub = value_2;
+//     while (s21_is_greater_or_equal(value_1, value_to_sub)) {  // b*2^q<=a
+//       for (int i = 0; i < q; i++) {
+//         basic_sub(value_2, value_1, result, &res);
+//         tmp.bits[0] = tmp.bits[0] | 1 << 2;
+//         s21_mul(value_to_sub, tmp, &value_to_sub);
+//         tmp.bits[0] = tmp.bits[0] >> 2;
+//       }
+//       q++;
+//     }
+//     tmp.bits[q / 32] = tmp.bits[q / 32] | (1 << ((q - 1) % 32));
+//     s21_add(*result, tmp, result);
+//     tmp.bits[q / 32] >> ((q - 1) % 32);
+//     q = 0;
+//     s21_sub(value_1, value_to_sub, &value_1);
+//   }
+//   return res;
+// }
