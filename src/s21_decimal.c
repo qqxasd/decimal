@@ -227,6 +227,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     s21_decimal value_to_sub = value_2;
     while (s21_is_greater_or_equal(value_1, value_to_sub)) {  // b*2^q<=a
       for (int i = 0; i < q; i++) {
+        basic_sub(value_2, value_1, result, &res);
         tmp.bits[0] = tmp.bits[0] | 1 << 2;
         s21_mul(value_to_sub, tmp, &value_to_sub);
         tmp.bits[0] = tmp.bits[0] >> 2;
