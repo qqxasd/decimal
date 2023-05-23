@@ -186,7 +186,7 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     int bit1 = getBit(value_1.bits[i / 32], i % 32);
     if (bit1) {
       s21_decimal value_to_add = value_2;
-      shift_decimal(&value_to_add, i);
+      s21_mul(value_to_add, (s21_decimal){{2, 0, 0, 0}}, &value_to_add);
       s21_add(*result, value_to_add, result);
     }
   }
@@ -194,26 +194,26 @@ int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   return res;
 }
 
-void shift_decimal(s21_decimal *value, int shift) {
-  s21_decimal extra_space = (s21_decimal){{0, 0, 0, 0}};
-  s21_decimal res = (s21_decimal){{0, 0, 0, 0}};
-  s21_decimal ten = (s21_decimal){{10, 0, 0, 0}};
-  for (int i = 95; i >= 0; i--) {
-    if (getBit((*value).bits[i / 32], i % 32)) {
-      if (i + shift > 95) {
-        extra_space.bits[(i + shift) / 32] =
-            setBit(extra_space.bits[(i + shift) / 32], i % 32);
-        (*value).bits[i / 32] = clearBit((*value).bits[i / 32], i % 32);
-      } else {
-        (*value).bits[(i + shift) / 32] =
-            setBit((*value).bits[(i + shift) / 32], (i + shift) % 32);
-        (*value).bits[i / 32] = clearBit((*value).bits[i / 32], i % 32);
-      }
-    }
-  }
-  res.bits[3] = (*value).bits[3];
-  normalize_long_decimal(*value, extra_space, &res);
-}
+// void shift_decimal(s21_decimal *value, int shift) {
+//   s21_decimal extra_space = (s21_decimal){{0, 0, 0, 0}};
+//   s21_decimal res = (s21_decimal){{0, 0, 0, 0}};
+//   s21_decimal ten = (s21_decimal){{10, 0, 0, 0}};
+//   for (int i = 95; i >= 0; i--) {
+//     if (getBit((*value).bits[i / 32], i % 32)) {
+//       if (i + shift > 95) {
+//         extra_space.bits[(i + shift) / 32] =
+//             setBit(extra_space.bits[(i + shift) / 32], i % 32);
+//         (*value).bits[i / 32] = clearBit((*value).bits[i / 32], i % 32);
+//       } else {
+//         (*value).bits[(i + shift) / 32] =
+//             setBit((*value).bits[(i + shift) / 32], (i + shift) % 32);
+//         (*value).bits[i / 32] = clearBit((*value).bits[i / 32], i % 32);
+//       }
+//     }
+//   }
+//   res.bits[3] = (*value).bits[3];
+//   normalize_long_decimal(*value, extra_space, &res);
+// }
 
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int res = 0;
@@ -241,18 +241,18 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   return res;
 }
 
-int normalize_long_decimal(s21_decimal little, s21_decimal big,
-                           s21_decimal *result) {
-  int res = 0;
-  s21_decimal ten = (s21_decimal){{10, 0, 0, 0}};
-  *result = little;
-  while (!is_zero(big)) {
-    div_long(&little, &big);
-  }
-  (*result) = little;
-  (*result).bits[3] |= 1 << 16;
-  return res;
-}
+// int normalize_long_decimal(s21_decimal little, s21_decimal big,
+//                            s21_decimal *result) {
+//   int res = 0;
+//   s21_decimal ten = (s21_decimal){{10, 0, 0, 0}};
+//   *result = little;
+//   while (!is_zero(big)) {
+//     div_long(&little, &big);
+//   }
+//   (*result) = little;
+//   (*result).bits[3] |= 1 << 16;
+//   return res;
+// }
 
 // void div_long(s21_decimal *little, s21_decimal *big) {  // divides only by 10
 //   int res = 0;
