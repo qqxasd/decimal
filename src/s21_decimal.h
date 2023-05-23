@@ -5,8 +5,20 @@
 
 typedef struct {
   unsigned int bits[4];
-  unsigned int bits[4];
 } s21_decimal;
+
+typedef struct {
+  struct s21_decimal divided_by_2_little;
+  struct s21_decimal divided_by_2_big;
+  struct s21_decimal divided_by_8_little;
+  struct s21_decimal divided_by_8_big;
+  struct s21_decimal divided_by_4_little;
+  struct s21_decimal divided_by_4_big;
+  struct s21_decimal divided_by_128_little_mult_by_4;
+  struct s21_decimal divided_by_128_big_mult_by_4;
+  struct s21_decimal divided_by_128_little_mult_by_2;
+  struct s21_decimal divided_by_128_big_mult_by_2;
+} divisions;
 
 int s21_add(s21_decimal value_1, s21_decimal value_2,
             s21_decimal *result);  // арифмтеичексие операции Никита (Кайфует)
@@ -22,15 +34,10 @@ int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
 void decrease_exponent(s21_decimal *value);
 void shift_decimal(s21_decimal *value, int shift);
-void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
-void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res);
-void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res);
-int getBit(unsigned int num, int pos);
-int increase_exponent(s21_decimal *value);
-void decrease_exponent(s21_decimal *value);
-void shift_decimal(s21_decimal *value, int shift);
+int normalize_long_decimal(s21_decimal little, s21_decimal big,
+                           s21_decimal *result);
+void div_long(s21_decimal *little, s21_decimal *big);
+void define_divisions(s21_decimal little, s21_decimal big, divisions *div);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
@@ -39,7 +46,17 @@ int s21_is_greater(s21_decimal, s21_decimal);           //
 int s21_is_greater_or_equal(s21_decimal, s21_decimal);  //
 int s21_is_equal(s21_decimal, s21_decimal);             //
 int s21_is_not_equal(s21_decimal, s21_decimal);         //
-
+int normalize_big(s21_big_decimal *x1, s21_big_decimal *x2);
+int multiply_10_big(s21_big_decimal *src);
+int add_for_multiply(s21_big_decimal value_1, s21_big_decimal value_2,
+                     s21_big_decimal *result);
+void shift_big_decimal_left(s21_big_decimal *value);
+void shift_right(s21_decimal *value);
+void decimal_to_big_decimal(s21_decimal from, s21_big_decimal *to);
+int is_zero(s21_decimal value);
+void set_bit(unsigned int *destination, unsigned int position,
+             unsigned int value);
+void printBits(size_t const size, void const *const ptr);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_from_int_to_decimal(
@@ -66,13 +83,6 @@ int get_sign(s21_decimal value);
 int setBit(unsigned int num, int pos);
 
 int clearBit(unsigned int num, int pos);
-int get_exp(s21_decimal value);
-int get_sign(s21_decimal value);
-int setBit(unsigned int num, int pos);
-
-int clearBit(unsigned int num, int pos);
 
 int toggleBit(unsigned int num, int pos);
-int toggleBit(unsigned int num, int pos);
-
 #endif
