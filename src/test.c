@@ -141,7 +141,7 @@ static s21_decimal result[] = {
     {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
       0x00000000}},  // 79228162514264337593543950334     // неправильно
 };
-
+// эти не проверял
 static s21_decimal err_num1[] = {
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
       0x00000000}},  // 79228162514264337593543950335

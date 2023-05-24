@@ -2,8 +2,8 @@
 
 int main() {
   s21_decimal result;
-  s21_add((s21_decimal){{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}},
-          (s21_decimal){{0x00000031, 0x00000000, 0x00000000, 0x00020000}},
+  s21_add((s21_decimal){{0x79353447, 0x00000004, 0x00000000, 0x00010000}},
+          (s21_decimal){{0xD927FFFF, 0xE1003B28, 0x00000004, 0x00140000}},
           &result);
 
   printf("%X %X %X %X\n", result.bits[0], result.bits[1], result.bits[2],
@@ -183,8 +183,8 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
               clearBit(value_1.bits[current_bit / 32], current_bit % 32);
           while (current_bit >= i) {
             current_bit--;
-            value_1.bits[current_bit / 32] = setBit(
-                value_1.bits[(current_bit - 1) / 32], (current_bit - 1) % 32);
+            value_1.bits[current_bit / 32] =
+                setBit(value_1.bits[current_bit / 32], current_bit % 32);
           }
 
           // carry.bits[(current_bit - 1) / 32] = setBit(
@@ -197,7 +197,7 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
         current_bit++;
       }
     }
-    if (flag) {
+    if (flag || sum) {
       (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
       // value_1.bits[current_bit / 32] =
       //  clearBit(value_1.bits[current_bit / 32], current_bit % 32);
