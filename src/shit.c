@@ -39,9 +39,12 @@ int s21_floor(s21_decimal value, s21_decimal *result) {
     }
 
     if(remainder != 0 && get_sign(value)) {
-        if ((*result).bits[0] > (*result).bits[0]++) {
-            // obrabotka perepolneniya
-        }
+        s21_decimal one;
+        s21_from_int_to_decimal(1, &one);
+        s21_add(*result, one, result);
+        // if ((*result).bits[0] > (*result).bits[0]++) {
+        //     // obrabotka perepolneniya
+        // }
     }
     return 0;
 }
@@ -63,12 +66,15 @@ int s21_round(s21_decimal value, s21_decimal *result) {
 
     if(remainder != 0) { 
         if(remainder == 5) { // tut mb po raznomu okruglyautsya oricatelnie chisla 
-            if ((*result).bits[0] > (getBit((*result).bits[0], 0))? ((*result).bits[0]++) : ((*result).bits[0])) {
-                // TERNARNIKKK, smotrim posledniy bit chisla,
-                // esli on est -> chislo nechetnoe -> chislo ++
-                // elsi ego net -> chislo chetnoe -> pass
-                // jbrabotka perepolneniya
-            }
+            s21_decimal one;
+            s21_from_int_to_decimal(1, &one);
+            s21_add(*result, one, result);
+            // if ((*result).bits[0] > (getBit((*result).bits[0], 0))? ((*result).bits[0]++) : ((*result).bits[0])) {
+            //     // TERNARNIKKK, smotrim posledniy bit chisla,
+            //     // esli on est -> chislo nechetnoe -> chislo ++
+            //     // elsi ego net -> chislo chetnoe -> pass
+            //     // jbrabotka perepolneniya
+            // }
         }
         else if(remainder > 5) {
             if ((*result).bits[0] > (*result).bits[0]++) {
@@ -79,7 +85,7 @@ int s21_round(s21_decimal value, s21_decimal *result) {
     return 0;
 }
 
-int divide_by_ten(s21_decimal *value) {
+int divide_by_ten(s21_decimal *value) { // mojno ispolzovat dlya lubogo deleniya
     s21_decimal remainder; // kak ego obyavlyat???
     int bit;
     for (int i = 0; i < 3 * 32; i++) {
