@@ -1,10 +1,5 @@
 #include "s21_decimal.h"
 
-typedef struct {
-  unsigned int bits[6];
-  unsigned int exp;  // А оно нам надо ?????
-} s21_big_decimal;
-
 void printBits(size_t const size, void const *const ptr) {
   unsigned char *b = (unsigned char *)ptr;
   unsigned char byte;
@@ -157,6 +152,22 @@ int s21_is_greater(s21_decimal value_1, s21_decimal value_2) {
       }
     }
     if (get_sign(value_1) && get_sign(value_2)) res = res ? 0 : 1;
+  }
+  return res;
+}
+
+int s21_is_greater_or_equal(s21_decimal value_1, s21_decimal value_2) {
+  int res = 0;
+  if (s21_is_greater(value_1, value_2) || s21_is_greater(value_1, value_2)) {
+    res = 1;
+  }
+  return res;
+}
+
+int s21_is_less_or_equal(s21_decimal value_1, s21_decimal value_2) {
+  int res = 0;
+  if (!s21_is_greater(value_1, value_2)) {
+    res = 1;
   }
   return res;
 }
