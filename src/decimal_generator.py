@@ -1,5 +1,6 @@
 import decimal
 import random
+import math
 
 
 def convert_py_decimal_to_4_ints(decimal_num: decimal.Decimal) -> tuple[int, int, int, int]:
@@ -46,12 +47,25 @@ def generate_random_decimal() -> decimal.Decimal:
 # decimal_number1 = decimal.Decimal('792281625142643375935.43950335')
 # print('0x%08X 0x%08X 0x%08X 0x%08X' % convert_py_decimal_to_4_ints(decimal_number1))
 
-print(convert_4_ints_to_py_decimal((3600900580, 1161359156, 4294537799, 0x00040000)))
-print(convert_4_ints_to_py_decimal((0xffffffff, 0xffffffff, 0xffffffff, 0x00040000)))
-
+# print(convert_4_ints_to_py_decimal((0x77D5E3AA, 0x0000011C, 0x00000000, 0x00060000)))
+# print(convert_4_ints_to_py_decimal((0x12a495, 0x00000000, 0x00000000, 0x60000)))
+# x = 396140812663555.40835774234624
+# print(x)
+# str_int = x.__str__()
+# dec = decimal.Decimal(str_int)
+# print('0x%08X 0x%08X 0x%08X 0x%08X' % convert_py_decimal_to_4_ints(dec))
+# str_int = round(x).__str__()
+# dec = decimal.Decimal(str_int)
+# print('0x%08X 0x%08X 0x%08X 0x%08X' % convert_py_decimal_to_4_ints(dec))
+decimalus = [(0x80000000, 0x80000000, 0x80000000, 0x801c0000), (0x4, 0x0, 0x0, 0x80000000), (0x80000000, 0x80000000, 0x80000000, 0xe0000), (0xb86b7b04, 0x16849, 0x0, 0x0), (0x1, 0x0, 0x0, 0x1c0000), (0x0, 0x0, 0x0, 0x0), (0xf4240, 0x0, 0x0, 0x1c0000), (0x0, 0x0, 0x0, 0x0), (0x80000000, 0x80000000, 0x80000000, 0x0), (0x80000000, 0x80000000, 0x80000000, 0x0)]
+for i in decimalus:
+    print(convert_4_ints_to_py_decimal((i)))
 # new_decimal = generate_random_decimal()
 # print(new_decimal)
 # print('0x%08X 0x%08X 0x%08X 0x%08X' % convert_py_decimal_to_4_ints(new_decimal))
 #687194767 4123168604 42949672
 #792281625142643375935439
 #792281625142643375935440
+
+# -3.9614081266355540835774234624
+# -3.961408126635554
