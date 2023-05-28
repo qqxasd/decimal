@@ -1,21 +1,12 @@
 #include "s21_decimal.h"
-
-int main() {
-  s21_decimal result;
-  float abob = 123.1231000;
-  // s21_add((s21_decimal){{0x79353447, 0x00000004, 0x00000000, 0x00010000}},
-  //         (s21_decimal){{0xD927FFFF, 0xE1003B28, 0x00000004, 0x00140000}},
-  //         &result);
-  // int res = s21_mul((s21_decimal){{0, 1, 0, 0x000A0000}},
-  //                   (s21_decimal){{10, 0, 0, 0x00180000}}, &result);
-  // printf("%X %X %X %X\n %d", result.bits[0], result.bits[1], result.bits[2],
-  //        result.bits[3], res);
-
- int aboba = 2112;
-  s21_from_float_to_decimal(abob, &result);
-  s21_from_decimal_to_float(result, &abob);
-  printf("%d\n", sizeof(int));
-}
+#include <string.h>
+// int main() {
+//   s21_decimal result;
+//   float aboba = 9999999999;
+//   s21_from_float_to_decimal(aboba, &result);
+//   s21_from_decimal_to_float(result, &aboba);
+//   printf("%f\n", aboba);
+// }
 
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
@@ -547,8 +538,10 @@ int s21_from_int_to_decimal(
   nulify_dec(dst);
   if (src & 1 << 31) {
     dst->bits[3] |= 1 << 31;
+    dst->bits[0] |= ~src + 1;
+  } else {
+    dst->bits[0] = src;
   }
-  dst->bits[0] |= ~(src & ~(1 << 31)) + 1;
   return 0;
 }
 
@@ -561,15 +554,20 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
     ret = 1;
   }
   else {
-    *dst = src.bits[3];
-    *dst |= src.bits[0] & ~(1 << 31);
+    *dst = src.bits[0];
+    if (get_sign(src)) {
+      *dst *= -1;
+    }
   }
   return ret;
 }
  
 int count_digits(long n) {
   int count = 0;
-  while(fabs(n) >= 1) {
+  if (n < 0) {
+    n *= -1;
+  }
+  while(n >= 1) {
     n /= 10; 
     count++;
   }
@@ -579,9 +577,9 @@ int count_digits(long n) {
 int count_pre_null(float n) {
   int i = 0;
   if ((int) n == 0) {
-    for (i = 1; i < 8 && (int) (n * pow(10, i)) == 0; i++);
+    for (i = 1; i < 9 && (int) (n * pow(10, i)) == 0; i++);
   }
-  return i;
+  return i - 1;
 }
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
@@ -594,7 +592,7 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   }
   long tmp = (long)src;
   src -= tmp;
-  char exp = 7 - count_digits(tmp);
+  int exp = 7 - count_digits(tmp);
   if (exp < 0) {
     while (count_digits(tmp) > 7) {
       tmp /= 10;
@@ -602,12 +600,12 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     exp = 0;
   } else {
   src *= pow(10, exp - count_pre_null(src));
-  tmp *= pow(10, exp - count_pre_null(src));
+  tmp *= pow(10, exp - count_pre_null(src) - 1);
   }
   tmp += src;
   if (tmp < 0) {tmp = ~tmp + 1;}
   dst->bits[0] = tmp;
-  dst->bits[3] |= exp << 16;
+  dst->bits[3] |= (exp << 16);
   return 0;
 }
 
@@ -619,19 +617,23 @@ void dec_to_str(s21_decimal src, char *str) {
   }
   for (int i = 2; i >= 0; i--) {
     for (int j = count_digits(src.bits[i]) - 1; j >= 0; j--) {
-      if (count == get_exp(src) - 1) {
-        str[count++] = '.';
-      } else {
         str[count++] = ((int)(src.bits[i] / pow(10, j))) % 10 + '0';
-      }
     }
   }
   str[count] = '\0';
+  char tmp[64];
+  strcpy(tmp, &str[count - 1 - get_exp(src)]);
+  str[strlen(str) - get_exp(src) - 1 ] = '.';
+  strcpy(&str[strlen(str) - get_exp(src)], tmp);
+  str[get_exp(src) + strlen(tmp) + 1] = '\0'; 
 }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
-  char tmp[256];
-  dec_to_str(src, tmp);
-  sscanf(tmp, "%f", dst);
+  *dst = src.bits[2];
+  *dst *= pow(10, count_digits(src.bits[2]));
+  *dst += src.bits[1];
+  *dst *= pow(10, count_digits(src.bits[1]));
+  *dst += src.bits[0];
+  *dst /= pow(10, get_exp(src));
   return 0;
 }

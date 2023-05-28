@@ -92,3 +92,12 @@ arithmetic_tests: clean
 	gcc -c test.c $(COVERAGE)
 	gcc test.o $(CCFLAGS) $(LIBS) $(COVERAGE) s21_decimal.a -o test
 	rm -rf *.o
+
+convert_test: clean
+	gcc $(CCFLAGS) -c $(SOURCES)
+	ar rc s21_decimal.a $(OBJECTS)
+	ranlib s21_decimal.a
+	gcc -c tests/convertion_test.c $(COVERAGE)
+	gcc convertion_test.o $(CCFLAGS) $(LIBS) $(COVERAGE) s21_decimal.a -o test
+	rm -rf *.o
+
