@@ -1,7 +1,8 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
-
+#define MAX_DEC_VALUE 7.9228162514264337593543950335e28
 #include <stdio.h>
+#include <math.h>
 
 typedef struct {
   unsigned int bits[4];
@@ -49,6 +50,7 @@ int is_zero(s21_decimal value);
 void set_bit(unsigned int *destination, unsigned int position,
              unsigned int value);
 void printBits(size_t const size, void const *const ptr);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_from_int_to_decimal(
