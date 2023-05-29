@@ -1,8 +1,8 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
 #define MAX_DEC_VALUE 7.9228162514264337593543950335e28
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
 typedef struct {
   unsigned int bits[4];
@@ -27,6 +27,12 @@ int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
 void decrease_exponent(s21_decimal *value);
 void banking_rounding(s21_decimal *value);
+void basic_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int overflow_check(s21_decimal value_1, s21_decimal value_2);
+int approximate_mul(s21_decimal value_1, s21_decimal value_2,
+                    s21_decimal *result, int *res);
+int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+                  int precise);
 // void shift_decimal(s21_decimal *value, int shift);
 // int normalize_long_decimal(s21_decimal little, s21_decimal big,
 //                            s21_decimal *result);

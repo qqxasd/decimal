@@ -1,25 +1,27 @@
 #include "s21_decimal.h"
-#include <string.h>
-// int main() {
-//  s21_decimal result;
-//  s21_add((s21_decimal){{0x80000000, 0x80000000, 0x80000000, 0x801C0000}},
-//  (s21_decimal){{0x80000000, 0x80000000, 0x80000000, 0x801C0000}},
-//  &result);
 
-// s21_div((s21_decimal){{(1 << 31), 1 << 31, 1 << 31, 0x001C0000}},
-//         (s21_decimal){{5, 0, 0, 0x00000000}}, &result);
-//  s21_mul(result, (s21_decimal){{2, 0, 0, 0x00000000}}, &result);
-//  banking_rounding(&result);
-// printf("%X %X %X %X\n", result.bits[0], result.bits[1],
-// result.bits[2],
-//        result.bits[3]);
-//}
-//   s21_decimal result;
-//   float aboba = 9999999999;
-//   s21_from_float_to_decimal(aboba, &result);
-//   s21_from_decimal_to_float(result, &aboba);
-//   printf("%f\n", aboba);
-// }
+#include <string.h>
+int main() {
+  s21_decimal result;
+  // s21_add((s21_decimal){{0x80000000, 0x80000000, 0x80000000, 0x801C0000}},
+  //          (s21_decimal){{0x80000000, 0x80000000, 0x80000000, 0x801C0000}},
+  //         &result);
+
+  // remainder_div((s21_decimal){{0, 1, 0, 0}},
+  //              (s21_decimal){{10, 0, 0, 0x00000000}}, &result, 1);
+  s21_mul((s21_decimal){{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x80000000}},
+          (s21_decimal){{0x00000005, 0x00000000, 0x00000000, 0x00010000}},
+          &result);
+  //  banking_rounding(&result);
+  printf("%X %X %X %X\n", result.bits[0], result.bits[1], result.bits[2],
+         result.bits[3]);
+  //}
+  //   s21_decimal result;
+  //   float aboba = 9999999999;
+  //   s21_from_float_to_decimal(aboba, &result);
+  //   s21_from_decimal_to_float(result, &aboba);
+  //   printf("%f\n", aboba);
+}
 
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
@@ -44,7 +46,7 @@ void equal_exponents(s21_decimal *value_1, s21_decimal *value_2) {
     if (exp2 > exp1) {
       if (!increase_exponent(value_1)) {
         if (!flag) {
-          diff = exp2 - diff; 
+          diff = exp2 - diff;
           flag = 1;
         }
         decrease_exponent(value_2);
@@ -238,37 +240,116 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   int res = 0;
+  int bits = overflow_check(value_1, value_2);
   int cur_exp = (get_exp(value_1) + get_exp(value_2));
   int cur_sgn = (getBit(get_sign(value_1) + get_sign(value_2), 0));
   if (!(is_zero(value_1) && is_zero(value_2))) {
-    *result = (s21_decimal){{0, 0, 0, value_2.bits[3]}};
-    if (s21_is_equal(value_2, (s21_decimal){{1, 0, 0, 0}})) {
-      *result = value_1;
+    if (bits < 96) {
+      basic_mul(value_1, value_2, result);
     } else {
-      value_1.bits[3] = clearBit(value_1.bits[3], 31);
-      value_2.bits[3] = clearBit(value_2.bits[3], 31);
-      for (int i = 0; i < 96 && !res; i++) {
-        int bit1 = getBit(value_1.bits[i / 32], i % 32);
-        if (bit1) {
-          s21_decimal value_to_add = value_2;
-          for (int j = 0; j < i; j++) {
-            res = s21_add(value_to_add, value_to_add, &value_to_add);
-          }
-          res = s21_add(*result, value_to_add, result);
-        }
-      }
-      (*result).bits[3] = (*result).bits[3] | (cur_exp << 16 | cur_sgn << 31);
+      approximate_mul(value_1, value_2, result, &res);
     }
   } else {
     *result = (s21_decimal){{0, 0, 0, 0}};
   }
-  while (get_exp(*result) > 28) {
-    decrease_exponent(result);
-  }
+  (*result).bits[3] = (cur_exp << 16 | cur_sgn << 31);
+  // while (get_exp(*result) > 28) {
+  //   decrease_exponent(result);
+  // }
   if (is_zero(*result) && get_exp(*result) > 0) {
     res = 2;
   }
   return res;
+}
+
+int approximate_mul(s21_decimal value_1, s21_decimal value_2,
+                    s21_decimal *result, int *res) {
+  int exp = 0;
+  value_1.bits[3] = 0;
+  value_2.bits[3] = 0;
+  s21_decimal value_1_cpy = value_1;
+  s21_decimal value_2_cpy = value_2;
+  while (overflow_check(value_1_cpy, value_2_cpy) > 96) {
+    exp++;
+    remainder_div(value_1_cpy, (s21_decimal){{10, 0, 0, 0}}, &value_1_cpy, 0);
+    remainder_div(value_2_cpy, (s21_decimal){{10, 0, 0, 0}}, &value_2_cpy, 0);
+  }
+  s21_decimal ten = (s21_decimal){{10, 0, 0, 0}};
+  for (int i = 0; i < exp; i++) {
+    basic_mul(ten, (s21_decimal){{10, 0, 0, 0}}, &ten);
+  }
+  s21_decimal tmp;
+  s21_decimal m;
+  remainder_div(value_1, ten, &m, 0);
+  // m.bits[3] |= (get_exp(value_1) << 16);
+  s21_decimal n;
+  remainder_div(value_2, ten, &n, 0);
+  // n.bits[3] |= (get_exp(value_2) << 16);
+  s21_decimal p;
+  basic_mul(m, ten, &tmp);
+  basic_sub(value_1, tmp, &p, 0);
+  s21_decimal q;
+  basic_mul(n, ten, &tmp);
+  basic_sub(value_2, tmp, &q, 0);
+  s21_mul(m, n, &tmp);
+  s21_mul(tmp, ten, result);
+  s21_decimal mq;
+  s21_mul(m, q, &mq);
+  basic_add(*result, mq, result, 0);
+  s21_decimal pn;
+  s21_mul(p, n, &pn);
+  basic_add(*result, pn, result, 0);
+  s21_decimal pq;
+  int x1 = approximate_mul(p, q, &pq, res);
+  ten = (s21_decimal){{10, 0, 0, 0}};
+  for (int i = 0; i < exp - x1; i++) {
+    basic_mul(ten, (s21_decimal){{10, 0, 0, 0}}, &ten);
+  }
+  remainder_div(pq, (s21_decimal){{10, 0, 0, 0}}, &pq, 0);
+  basic_add(*result, pq, result, 0);
+  // result->bits[3] = (getBit(get_sign(value_1) + get_sign(value_2), 0) << 31
+  // |
+  //                    (get_exp(value_1) + get_exp(value_2) - exp) << 16);
+  return exp;
+}
+
+int overflow_check(s21_decimal value_1, s21_decimal value_2) {
+  int res = 0;
+  int flag = 0;
+  for (int i = 95; i >= 0 & !flag; i--) {
+    if (getBit(value_1.bits[i / 32], i % 32)) {
+      flag = 1;
+      res += i;
+    }
+  }
+  flag = 0;
+  for (int i = 95; i >= 0 & !flag; i--) {
+    if (getBit(value_2.bits[i / 32], i % 32)) {
+      flag = 1;
+      res += i;
+    }
+  }
+  return res;
+}
+
+void basic_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
+  *result = (s21_decimal){{0, 0, 0, 0}};
+  if (s21_is_equal(value_2, (s21_decimal){{1, 0, 0, 0}})) {
+    *result = value_1;
+  } else {
+    value_1.bits[3] = clearBit(value_1.bits[3], 31);
+    value_2.bits[3] = clearBit(value_2.bits[3], 31);
+    for (int i = 0; i < 96; i++) {
+      int bit1 = getBit(value_1.bits[i / 32], i % 32);
+      if (bit1) {
+        s21_decimal value_to_add = value_2;
+        for (int j = 0; j < i; j++) {
+          s21_add(value_to_add, value_to_add, &value_to_add);
+        }
+        s21_add(*result, value_to_add, result);
+      }
+    }
+  }
 }
 
 // void shift_decimal(s21_decimal *value, int shift) {
@@ -303,40 +384,59 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     *result = (s21_decimal){{0, 0, 0, 0}};
     int cur_sgn = getBit(get_sign(value_1) + get_sign(value_2), 0);
     int cur_exp;
-    while ((cur_exp = get_exp(value_1) - get_exp(value_2)) < 0) {
-      increase_exponent(&value_1);
-    }
-    int q = 0;
-    value_1.bits[3] = 0;
-    value_2.bits[3] = 0;
-    s21_decimal tmp = (s21_decimal){{0, 0, 0, 0}};
-    while (s21_is_greater_or_equal(value_1, value_2)) {
-      s21_decimal value_to_add = (s21_decimal){{0, 0, 0, 0}};
-      while (s21_is_greater_or_equal(value_1, value_to_add) &&
-             q < 95) {  // b*2^q<=a
-        value_to_add = value_2;
-        tmp = value_to_add;
-        for (int i = 0; i < q && s21_is_greater_or_equal(value_1, value_to_add);
-             i++) {
-          tmp = value_to_add;
-          s21_add(value_to_add, value_to_add, &value_to_add);
-        }
-        q++;
-      }
-      q = q - 2;
-      value_to_add = (s21_decimal){{0, 0, 0, 0}};
-      value_to_add.bits[q / 32] |= (1 << (q % 32));
-      s21_add(*result, value_to_add, result);
-      q = 0;
-      s21_sub(value_1, tmp, &value_1);
-      tmp = (s21_decimal){{0, 0, 0, 0}};
-    }
+    //  while ((cur_exp = get_exp(value_1) - get_exp(value_2)) < 0) {
+    //   increase_exponent(&value_1);
+    //  }
+    cur_exp = remainder_div(value_1, value_2, result, 1);
     banking_rounding(result);
     result->bits[3] |= (cur_sgn << 31 | cur_exp << 16);
   }
   return res;
 }
 
+int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+                  int precise) {
+  int q = 1;
+  int cur_exp = get_exp(value_1) - get_exp(value_2);
+  int max_shift = 0;
+  for (int i = 95; i >= 0 && !max_shift; i--) {
+    if (getBit(value_2.bits[i / 32], i % 32)) {
+      max_shift = 96 - i;
+    }
+  }
+  *result = (s21_decimal){{0, 0, 0, 0}};
+  value_1.bits[3] = 0;
+  value_2.bits[3] = 0;
+  s21_decimal tmp = (s21_decimal){{0, 0, 0, 0}};
+  while (s21_is_greater_or_equal(value_1, value_2)) {
+    s21_decimal value_to_add = value_2;
+    while (s21_is_greater_or_equal(value_1, value_to_add) && q < max_shift &&
+           !getBit(result->bits[2], 31)) {  // b*2^q<=a
+      value_to_add = value_2;
+      tmp = value_to_add;
+      for (int i = 0; i < q && !(getBit(tmp.bits[2], 30)); i++) {
+        tmp = value_to_add;
+        s21_add(value_to_add, value_to_add, &value_to_add);
+      }
+      q++;
+    }
+    q = q - 2;
+    value_to_add = (s21_decimal){{0, 0, 0, 0}};
+    value_to_add.bits[q / 32] = (1 << (q % 32));
+    s21_add(*result, value_to_add, result);
+    q = 0;
+    s21_sub(value_1, tmp, &value_1);
+    tmp = (s21_decimal){{0, 0, 0, 0}};
+    if (precise && !(is_zero(value_1)) && s21_is_less(value_1, value_2) &&
+        (cur_exp < 28) && !(result->bits[2] >> 28)) {
+      basic_mul(value_1, (s21_decimal){{10, 0, 0, 0}}, &value_1);
+      basic_mul(*result, (s21_decimal){{10, 0, 0, 0}}, result);
+      cur_exp++;
+    }
+  }
+  result->bits[3] = 0;
+  return cur_exp;
+}
 // int normalize_long_decimal(s21_decimal little, s21_decimal big,
 //                            s21_decimal *result) {
 //   int res = 0;
@@ -555,6 +655,14 @@ int s21_is_less_or_equal(s21_decimal value_1, s21_decimal value_2) {
   return res;
 }
 
+int s21_is_less(s21_decimal value_1, s21_decimal value_2) {
+  int res = 0;
+  if (!s21_is_greater(value_1, value_2) && !s21_is_equal(value_1, value_2)) {
+    res = 1;
+  }
+  return res;
+}
+
 void nulify_dec(s21_decimal *dst) {
   dst->bits[0] = 0;
   dst->bits[1] = 0;
@@ -562,8 +670,7 @@ void nulify_dec(s21_decimal *dst) {
   dst->bits[3] = 0;
 }
 
-int s21_from_int_to_decimal(
-    int src, s21_decimal *dst) {
+int s21_from_int_to_decimal(int src, s21_decimal *dst) {
   nulify_dec(dst);
   if (src & 1 << 31) {
     dst->bits[3] |= 1 << 31;
@@ -579,10 +686,10 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   while (get_exp(src)) {
     decrease_exponent(&src);
   }
-  if (src.bits[0] & 1 << 31 || src.bits[1] || src.bits[1] & 1 << 31 || src.bits[2] || src.bits[2] & 1 << 31) {
+  if (src.bits[0] & 1 << 31 || src.bits[1] || src.bits[1] & 1 << 31 ||
+      src.bits[2] || src.bits[2] & 1 << 31) {
     ret = 1;
-  }
-  else {
+  } else {
     *dst = src.bits[0];
     if (get_sign(src)) {
       *dst *= -1;
@@ -590,14 +697,14 @@ int s21_from_decimal_to_int(s21_decimal src, int *dst) {
   }
   return ret;
 }
- 
+
 int count_digits(long n) {
   int count = 0;
   if (n < 0) {
     n *= -1;
   }
-  while(n >= 1) {
-    n /= 10; 
+  while (n >= 1) {
+    n /= 10;
     count++;
   }
   return count;
@@ -605,15 +712,16 @@ int count_digits(long n) {
 
 int count_pre_null(float n) {
   int i = 0;
-  if ((int) n == 0) {
-    for (i = 1; i < 9 && (int) (n * pow(10, i)) == 0; i++);
+  if ((int)n == 0) {
+    for (i = 1; i < 9 && (int)(n * pow(10, i)) == 0; i++)
+      ;
   }
   return i - 1;
 }
 
 int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   if (fabs(src) < 1e-28 || src > MAX_DEC_VALUE || isinf(src) != 0) {
-    return 1; 
+    return 1;
   }
   nulify_dec(dst);
   if (src < 0) {
@@ -628,11 +736,13 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
     }
     exp = 0;
   } else {
-  src *= pow(10, exp - count_pre_null(src));
-  tmp *= pow(10, exp - count_pre_null(src) - 1);
+    src *= pow(10, exp - count_pre_null(src));
+    tmp *= pow(10, exp - count_pre_null(src) - 1);
   }
   tmp += src;
-  if (tmp < 0) {tmp = ~tmp + 1;}
+  if (tmp < 0) {
+    tmp = ~tmp + 1;
+  }
   dst->bits[0] = tmp;
   dst->bits[3] |= (exp << 16);
   return 0;
@@ -640,21 +750,21 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
 
 void dec_to_str(s21_decimal src, char *str) {
   int count = 0;
-  if (get_sign(src)) { 
+  if (get_sign(src)) {
     str[0] = '-';
     count++;
   }
   for (int i = 2; i >= 0; i--) {
     for (int j = count_digits(src.bits[i]) - 1; j >= 0; j--) {
-        str[count++] = ((int)(src.bits[i] / pow(10, j))) % 10 + '0';
+      str[count++] = ((int)(src.bits[i] / pow(10, j))) % 10 + '0';
     }
   }
   str[count] = '\0';
   char tmp[64];
   strcpy(tmp, &str[count - 1 - get_exp(src)]);
-  str[strlen(str) - get_exp(src) - 1 ] = '.';
+  str[strlen(str) - get_exp(src) - 1] = '.';
   strcpy(&str[strlen(str) - get_exp(src)], tmp);
-  str[get_exp(src) + strlen(tmp) + 1] = '\0'; 
+  str[get_exp(src) + strlen(tmp) + 1] = '\0';
 }
 
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
