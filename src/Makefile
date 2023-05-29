@@ -85,3 +85,10 @@ gcc_leaks: clean
 	-ggdb -g -fsanitize=leak -fsanitize=address -fsanitize=undefined \
 	-fsanitize=unreachable -fno-sanitize-recover -fstack-protector -fanalyzer \
 	
+shit_tests:
+	gcc -g $(ССFLAGS) -c $(SOURCES)
+	ar rc s21_decimal.a $(OBJECTS)
+	ranlib s21_decimal.a
+	gcc -c -g shit_test.c $(COVERAGE)
+	gcc shit_test.o $(CCFLAGS) -g $(LIBS) $(COVERAGE) s21_decimal.a -o test
+	rm -rf *.o
