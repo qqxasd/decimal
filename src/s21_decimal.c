@@ -3,8 +3,8 @@
 #include <string.h>
 int main() {
   s21_decimal result;
-  s21_mul((s21_decimal){{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}},
-          (s21_decimal){{0x00000005, 0x00000000, 0x00000000, 0x00010000}},
+  s21_div((s21_decimal){{0x0000000A, 0x00000000, 0x00000000, 0x00000000}},
+          (s21_decimal){{0x00004E2A, 0x00000000, 0x00000000, 0x00000000}},
           &result);
 
   printf("%X %X %X %X\n", result.bits[0], result.bits[1], result.bits[2],
@@ -367,8 +367,8 @@ void remainder_big_div(s21_big_decimal value_1, s21_big_decimal value_2,
   s21_big_decimal tmp = (s21_big_decimal){{0, 0, 0, 0, 0, 0}, 0};
   while (big_is_greater_or_equal(value_1, value_2)) {
     s21_big_decimal value_to_add = value_2;
-    while (big_is_greater_or_equal(value_1, value_to_add) && q < max_shift &&
-           !getBit(result->bits[5], 31)) {  // b*2^q<=a
+    while (big_is_greater_or_equal(value_1, value_to_add) &&
+           q < max_shift) {  // b*2^q<=a
       value_to_add = value_2;
       tmp = value_to_add;
       for (int i = 0; i < q && !(getBit(tmp.bits[5], 30)); i++) {
@@ -477,11 +477,23 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
   } else {
     *result = (s21_decimal){{0, 0, 0, 0}};
     int cur_sgn = getBit(get_sign(value_1) + get_sign(value_2), 0);
-    int cur_exp;
-    while ((cur_exp = get_exp(value_1) - get_exp(value_2)) < 0) {
-      increase_exponent(&value_1);
+    int cur_exp = get_exp(value_1) - get_exp(value_2);
+    s21_decimal cpy_1 = value_1;
+    cpy_1.bits[3] = 0;
+    s21_decimal cpy_2 = value_2;
+    cpy_2.bits[3] = 0;
+    int increased = 0;
+    while (s21_is_less(cpy_1, cpy_2)) {
+      increase_exponent(&cpy_1);
+      cpy_1.bits[3] = 0;
+      increased++;
     }
-    cur_exp = remainder_div(value_1, value_2, result, 1);
+    value_1.bits[0] = cpy_1.bits[0];
+    value_1.bits[1] = cpy_1.bits[1];
+    value_1.bits[2] = cpy_1.bits[2];
+    value_1.bits[3] =
+        (get_sign(value_1) << 31 | ((get_exp(value_1) + increased) << 16));
+    cur_exp += remainder_div(value_1, value_2, result, 1);
     banking_rounding(result);
     result->bits[3] |= (cur_sgn << 31 | cur_exp << 16);
   }
@@ -520,10 +532,10 @@ int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
     s21_add(*result, value_to_add, result);
     q = 0;
     s21_sub(value_1, tmp, &value_1);
-    if (precise && !(is_zero(value_1)) && s21_is_less(value_1, value_2) &&
-        (cur_exp < 28) &&
-        !(getBit(result->bits[2], 29) && getBit(result->bits[2], 30) &&
-          getBit(result->bits[2], 29))) {
+    while (precise && !(is_zero(value_1)) && s21_is_less(value_1, value_2) &&
+           (cur_exp < 28) &&
+           !(getBit(result->bits[2], 29) && getBit(result->bits[2], 30) &&
+             getBit(result->bits[2], 31))) {
       basic_mul(value_1, (s21_decimal){{10, 0, 0, 0}}, &value_1);
       s21_mul(*result, (s21_decimal){{10, 0, 0, 0}}, result);
       cur_exp++;
