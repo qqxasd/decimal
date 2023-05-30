@@ -9,6 +9,10 @@
 #define S21_FALSE 0
 #define S21_MAX_U_INT 4294967295  // 0b11111111111111111111111111111111
 
+Suite *suite_add(void);
+Suite *suite_div(void);
+Suite *suite_sub(void);
+Suite *suite_mul(void);
 Suite *suite_is_greater(void);
 // Suite *suite_is_equal(void);
 // Suite *suite_is_greater_or_equal(void);

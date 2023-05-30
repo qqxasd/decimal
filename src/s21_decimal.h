@@ -29,10 +29,21 @@ void decrease_exponent(s21_decimal *value);
 void banking_rounding(s21_decimal *value);
 void basic_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int overflow_check(s21_decimal value_1, s21_decimal value_2);
-int approximate_mul(s21_decimal value_1, s21_decimal value_2,
-                    s21_decimal *result, int *res);
+// int approximate_mul(s21_decimal value_1, s21_decimal value_2,
+//                     s21_decimal *result, int *res);
 int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                   int precise);
+void big_add(s21_big_decimal value_1, s21_big_decimal value_2,
+             s21_big_decimal *result);
+void big_mul(s21_big_decimal value_1, s21_big_decimal value_2,
+             s21_big_decimal *result);
+void big_sub(s21_big_decimal value_1, s21_big_decimal value_2,
+             s21_big_decimal *result);
+int big_is_greater_or_equal(s21_big_decimal value_1, s21_big_decimal value_2);
+int long_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int big_decimal_to_decimal(s21_big_decimal long_result, s21_decimal *result);
+void remainder_big_div(s21_big_decimal value_1, s21_big_decimal value_2,
+                       s21_big_decimal *result);
 // void shift_decimal(s21_decimal *value, int shift);
 // int normalize_long_decimal(s21_decimal little, s21_decimal big,
 //                            s21_decimal *result);
