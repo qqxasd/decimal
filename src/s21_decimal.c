@@ -3,10 +3,11 @@
 #include <string.h>
 int main() {
   s21_decimal result;
-  s21_div((s21_decimal){{0x0000000A, 0x00000000, 0x00000000, 0x00000000}},
-          (s21_decimal){{0x00004E2A, 0x00000000, 0x00000000, 0x00000000}},
+  s21_div((s21_decimal){{0x0001DC88, 0x00000000, 0x00000000, 0x00020000}},
+          (s21_decimal){{0x0116F341, 0x00000000, 0x00000000, 0x80030000}},
           &result);
-
+  // s21_div((s21_decimal){{94534286, 1642445539, 544598, 0}},
+  //         (s21_decimal){{10, 0, 0, 0}}, &result);
   printf("%X %X %X %X\n", result.bits[0], result.bits[1], result.bits[2],
          result.bits[3]);
 }
@@ -106,8 +107,9 @@ void banking_rounding(s21_decimal *value) {
     }
   }
   int last = sum_last % 10;
-  s21_decimal one = (s21_decimal){{1, 0, 0, value->bits[3]}};
   int pre_last = (sum_pre_last % 10 + sum_last / 10) % 10;
+  s21_div(*value, (s21_decimal){{10, 0, 0, 0}}, value);
+  s21_decimal one = (s21_decimal){{1, 0, 0, value->bits[3]}};
   if (get_sign(*value) && last) {
     s21_sub(*value, one, value);
   } else if ((getBit(pre_last, 0) && (last > 4)) ||
@@ -208,6 +210,7 @@ void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 
 void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                int *res) {
+  *result = (s21_decimal){{0, 0, 0, 0}};
   for (int i = 0; i < 96; i++) {
     int bit1 = getBit(value_1.bits[i / 32], i % 32);
     int bit2 = getBit(value_2.bits[i / 32], i % 32);
@@ -217,14 +220,12 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
     while ((sum = (bit1 - bit2)) < 0) {
       if ((bit1 = getBit(value_1.bits[current_bit / 32], current_bit % 32))) {
         flag = 1;
-        while (getBit(value_1.bits[current_bit / 32], current_bit % 32)) {
+        value_1.bits[current_bit / 32] =
+            clearBit(value_1.bits[current_bit / 32], current_bit % 32);
+        while (current_bit >= i) {
+          current_bit--;
           value_1.bits[current_bit / 32] =
-              clearBit(value_1.bits[current_bit / 32], current_bit % 32);
-          while (current_bit >= i) {
-            current_bit--;
-            value_1.bits[current_bit / 32] =
-                setBit(value_1.bits[current_bit / 32], current_bit % 32);
-          }
+              setBit(value_1.bits[current_bit / 32], current_bit % 32);
         }
       } else {
         current_bit++;
@@ -483,7 +484,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     s21_decimal cpy_2 = value_2;
     cpy_2.bits[3] = 0;
     int increased = 0;
-    while (s21_is_less(cpy_1, cpy_2)) {
+    while (s21_is_less(cpy_1, cpy_2) && (!is_zero(cpy_1))) {
       increase_exponent(&cpy_1);
       cpy_1.bits[3] = 0;
       increased++;
@@ -493,8 +494,7 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     value_1.bits[2] = cpy_1.bits[2];
     value_1.bits[3] =
         (get_sign(value_1) << 31 | ((get_exp(value_1) + increased) << 16));
-    cur_exp += remainder_div(value_1, value_2, result, 1);
-    banking_rounding(result);
+    cur_exp = remainder_div(value_1, value_2, result, 1);
     result->bits[3] |= (cur_sgn << 31 | cur_exp << 16);
   }
   return res;
@@ -530,16 +530,20 @@ int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
     value_to_add = (s21_decimal){{0, 0, 0, 0}};
     value_to_add.bits[q / 32] = (1 << (q % 32));
     s21_add(*result, value_to_add, result);
+    basic_sub(value_1, tmp, &value_1, &q);
     q = 0;
-    s21_sub(value_1, tmp, &value_1);
     while (precise && !(is_zero(value_1)) && s21_is_less(value_1, value_2) &&
-           (cur_exp < 28) &&
-           !(getBit(result->bits[2], 29) && getBit(result->bits[2], 30) &&
-             getBit(result->bits[2], 31))) {
+           (cur_exp < 29) && (result->bits[2] <= 4294967295 / 10)) {
       basic_mul(value_1, (s21_decimal){{10, 0, 0, 0}}, &value_1);
-      s21_mul(*result, (s21_decimal){{10, 0, 0, 0}}, result);
+      if (!s21_is_equal(value_2, (s21_decimal){{10, 0, 0, 0}})) {
+        basic_mul(*result, (s21_decimal){{10, 0, 0, 0}}, result);
+      }
       cur_exp++;
     }
+  }
+  if (cur_exp == 29) {
+    banking_rounding(result);
+    cur_exp--;
   }
   result->bits[3] = 0;
   return cur_exp;
