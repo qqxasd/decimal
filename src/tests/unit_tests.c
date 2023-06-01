@@ -1,7 +1,7 @@
 #include "unit_tests.h"
 
 int main(void) {
-  Suite *list_cases[] = {suite_is_greater(), suite_mul(), NULL};
+  Suite *list_cases[] = {suite_is_greater(), suite_add(), suite_sub(), NULL};
 
   for (Suite **current_testcase = list_cases; *current_testcase != NULL;
        current_testcase++) {
