@@ -1,15 +1,16 @@
 #include "s21_decimal.h"
 
 #include <string.h>
-int main() {
-  s21_decimal result;
-  int res = s21_div(
-      (s21_decimal){{0x014CF9BF, 0x00000000, 0x00000000, 0x80020000}},
-      (s21_decimal){{0x9336DD9D, 0x00000032, 0x00000000, 0x80020000}}, &result);
+// int main() {
+//   s21_decimal result;
+//   int res = s21_add(
+//       (s21_decimal){{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000}},
+//       (s21_decimal){{0x00000005, 0x00000000, 0x00000000, 0x00010000}},
+//       &result);
 
-  printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
-         result.bits[1], result.bits[2], result.bits[3]);
-}
+//   printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
+//          result.bits[1], result.bits[2], result.bits[3]);
+// }
 
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
@@ -27,11 +28,15 @@ void equal_exponents(s21_decimal *value_1, s21_decimal *value_2) {
   int exp2 = get_exp(*value_2);
   int decreased = 10;
   int val_num = 2;
+  int more_than_once = 0;
   while (exp1 != exp2) {
     if (exp2 > exp1) {
       if (!increase_exponent(value_1)) {
         decreased = decrease_exponent(value_2);
         exp2 = get_exp(*value_2);
+        if (!more_than_once && val_num != 2) {
+          more_than_once = 1;
+        }
         val_num = 0;
       }
       exp1 = get_exp(*value_1);
@@ -39,6 +44,9 @@ void equal_exponents(s21_decimal *value_1, s21_decimal *value_2) {
       if (!increase_exponent(value_2)) {
         decreased = decrease_exponent(value_1);
         exp1 = get_exp(*value_1);
+        if (!more_than_once && val_num != 2) {
+          more_than_once = 1;
+        }
         val_num = 1;
       }
       exp2 = get_exp(*value_2);
@@ -46,11 +54,17 @@ void equal_exponents(s21_decimal *value_1, s21_decimal *value_2) {
   }
   if (decreased < 10) {
     if (val_num) {
-      if (decreased > 4) {
+      if (((getBit(value_1->bits[0], 0) || more_than_once ||
+            getBit(value_2->bits[0], 0)) &&
+           (decreased == 5)) ||
+          (decreased > 5) || (get_sign(*value_1) && decreased)) {
         s21_add(*value_1, (s21_decimal){{1, 0, 0, value_1->bits[3]}}, value_1);
       }
     } else {
-      if (decreased > 4) {
+      if (((getBit(value_2->bits[0], 0) || more_than_once ||
+            getBit(value_1->bits[0], 0)) &&
+           (decreased == 5)) ||
+          (decreased > 5) || (get_sign(*value_2) && decreased)) {
         s21_add(*value_2, (s21_decimal){{1, 0, 0, value_2->bits[3]}}, value_2);
       }
     }
