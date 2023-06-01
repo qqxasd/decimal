@@ -1,16 +1,15 @@
 #include "s21_decimal.h"
 
 #include <string.h>
-// int main() {
-//   s21_decimal result;
-//   int res = s21_sub(
-//       (s21_decimal){{0x1422CF6C, 0x000001FC, 0x00000000, 0x80030000}},
-//       (s21_decimal){{0xF96C01C5, 0x0007B6B6, 0x00000000, 0x800B0000}},
-//       &result);
+int main() {
+  s21_decimal result;
+  int res = s21_div(
+      (s21_decimal){{0x014CF9BF, 0x00000000, 0x00000000, 0x80020000}},
+      (s21_decimal){{0x9336DD9D, 0x00000032, 0x00000000, 0x80020000}}, &result);
 
-//   printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
-//          result.bits[1], result.bits[2], result.bits[3]);
-// }
+  printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
+         result.bits[1], result.bits[2], result.bits[3]);
+}
 
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
@@ -536,31 +535,37 @@ int remainder_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
     s21_decimal value_to_add = value_2;
     while (s21_is_greater_or_equal(value_1, value_to_add) && q < max_shift &&
            !getBit(result->bits[2], 31)) {  // b*2^q<=a
-      value_to_add = value_2;
-      tmp = value_to_add;
-      for (int i = 0; i < q && !(getBit(tmp.bits[2], 30)); i++) {
-        tmp = value_to_add;
-        s21_add(value_to_add, value_to_add, &value_to_add);
-      }
+      value_to_add =
+          (s21_decimal){{value_2.bits[0] << q,
+                         (value_2.bits[1] << q) | (value_2.bits[0] >> (31 - q)),
+                         (value_2.bits[2] << q) | (value_2.bits[1] >> (31 - q)),
+                         value_2.bits[3]}};
+      tmp = (s21_decimal){
+          {value_2.bits[0] << (q - 1),
+           (value_2.bits[1] << (q - 1)) | (value_2.bits[0] >> (32 - q)),
+           (value_2.bits[2] << (q - 1)) | (value_2.bits[1] >> (32 - q)),
+           value_2.bits[3]}};
       q++;
     }
     q = q - 2;
     value_to_add = (s21_decimal){{0, 0, 0, 0}};
     value_to_add.bits[q / 32] = (1 << (q % 32));
     s21_add(*result, value_to_add, result);
-    basic_sub(value_1, tmp, &value_1, &q);
+    s21_sub(value_1, tmp, &value_1);
     q = 0;
     while (precise && !(is_zero(value_1)) && s21_is_less(value_1, value_2) &&
-           (cur_exp < 29) && (result->bits[2] <= 4294967295 / 10)) {
-      basic_mul(value_1, (s21_decimal){{10, 0, 0, 0}}, &value_1);
-      if (!s21_is_equal(value_2, (s21_decimal){{10, 0, 0, 0}})) {
-        basic_mul(*result, (s21_decimal){{10, 0, 0, 0}}, result);
-      }
+           (cur_exp < 29) && (!(result->bits[2] >> 28))) {
+      mul_by_10(&value_1);
+      mul_by_10(result);
       cur_exp++;
     }
   }
   if (cur_exp == 29) {
-    banking_rounding(result, 1);
+    int last = div_by_10(*result, result, 0);
+    if ((getBit(result->bits[0], 0) && (last == 5)) || (last > 5) ||
+        (get_sign(*result) && last)) {
+      s21_add(*result, (s21_decimal){{1, 0, 0, result->bits[3]}}, result);
+    }
     cur_exp--;
   }
   result->bits[3] = 0;
