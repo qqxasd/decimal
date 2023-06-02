@@ -30,12 +30,12 @@ clean:
 
 $(TARGET): clean
 	@echo $(TESTS_DIR) $(TESTS_SRC)
-	$(CC) $(CCFLAGS) -c $(SOURCES)
+	$(CC) $(CCFLAGS) $(COVERAGE) -c $(SOURCES)
 	ar rc $@ $(OBJECTS)
 	ranlib $@
 
 test: $(TARGET)
-	$(CC) $(CCFLAGS) $(COVERAGE) -c $(TESTS_SRC)
+	$(CC) $(CCFLAGS) -c $(TESTS_SRC)
 	$(CC) $(CCFLAGS) $(COVERAGE) $(TESTS_OBJ) $(LIBS) $(TARGET) -o $@
 	rm -rf $@.o
 
@@ -85,7 +85,6 @@ gcc_leaks: clean
 	-ggdb -g -fsanitize=leak -fsanitize=address -fsanitize=undefined \
 	-fsanitize=unreachable -fno-sanitize-recover -fstack-protector -fanalyzer \
 	
-<<<<<<< HEAD
 arithmetic_tests: clean
 	gcc $(ССFLAGS) -c $(SOURCES)
 	ar rc s21_decimal.a $(OBJECTS)
@@ -100,12 +99,4 @@ convert_test: clean
 	ranlib s21_decimal.a
 	gcc -c tests/convertion_test.c $(COVERAGE)
 	gcc convertion_test.o $(CCFLAGS) $(LIBS) $(COVERAGE) s21_decimal.a -o test
-=======
-shit_tests:
-	gcc -g $(ССFLAGS) -c $(SOURCES)
-	ar rc s21_decimal.a $(OBJECTS)
-	ranlib s21_decimal.a
-	gcc -c -g shit_test.c $(COVERAGE)
-	gcc shit_test.o $(CCFLAGS) -g $(LIBS) $(COVERAGE) s21_decimal.a -o test
->>>>>>> origin/shit
 	rm -rf *.o

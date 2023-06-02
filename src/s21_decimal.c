@@ -638,25 +638,6 @@ int s21_from_float_to_decimal(float src, s21_decimal *dst) {
   return 0;
 }
 
-void dec_to_str(s21_decimal src, char *str) {
-  int count = 0;
-  if (get_sign(src)) { 
-    str[0] = '-';
-    count++;
-  }
-  for (int i = 2; i >= 0; i--) {
-    for (int j = count_digits(src.bits[i]) - 1; j >= 0; j--) {
-        str[count++] = ((int)(src.bits[i] / pow(10, j))) % 10 + '0';
-    }
-  }
-  str[count] = '\0';
-  char tmp[64];
-  strcpy(tmp, &str[count - 1 - get_exp(src)]);
-  str[strlen(str) - get_exp(src) - 1 ] = '.';
-  strcpy(&str[strlen(str) - get_exp(src)], tmp);
-  str[get_exp(src) + strlen(tmp) + 1] = '\0'; 
-}
-
 int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   *dst = src.bits[2];
   *dst *= pow(10, count_digits(src.bits[2]));

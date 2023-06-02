@@ -24,7 +24,6 @@ int s21_truncate(s21_decimal value, s21_decimal *result) {
         bit = getBit(value.bits[i/32], i % 32);
         if(bit) (*result).bits[i/32] = setBit((*result).bits[i/32], i % 32);
     }
-    s21_decimal ten = {{0x0000000A, 0x00000000, 0x00000000, 0x00000000}}; // 10
     for (int i = 0; i < exp; i ++) {
         divide_by_ten(*result, result);
         // printf("new%d = (0x%0x, 0x%0x, 0x%0x, 0x%0x),\n", i, result->bits[0], result->bits[1], result->bits[2], result->bits[3]);

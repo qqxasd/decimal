@@ -16,6 +16,11 @@ Suite *suite_is_greater(void);
 // Suite *suite_is_less(void);
 // Suite *suite_is_less_or_equal(void);
 
+Suite *dec_int_suit();
+Suite *dec_float_suit();
+Suite *dec_int_float_suit();
+
+
 void run_testcase(Suite *testcase);
 
 #endif  // SRC_TESTS_TESTS_H_

@@ -18,8 +18,7 @@ START_TEST(dec_int_test) {
         ck_assert_int_eq(dec_int_real, dec_int_res_exp[i]);
     }
     s21_decimal dec1[] = {{{0, 0, 1, 0}}, {{0, 122, 212, 121}}, {{0x10000000, 0x10000000, 0, 0}}};
-    for (int i = 0; i < sizeof(dec1) / sizeof(s21_decimal); i++)  {
-        printf("aboba\n");
+    for (int i = 0; i < (int) (sizeof(dec1) / sizeof(s21_decimal)); i++)  {
         dec_int_real = s21_from_decimal_to_int(dec1[i], &tmp);
         ck_assert_int_eq(dec_int_real, 1);
     }
@@ -36,13 +35,13 @@ START_TEST(dec_float_test) {
     }
     //too small/big
     float floa1[] = {1e-29, INFINITY}; 
-    for (int i = 0; i < sizeof(floa1) / sizeof(float); i++) {
+    for (int i = 0; i < (int) (sizeof(floa1) / sizeof(float)); i++) {
         ck_assert_int_eq(1, s21_from_float_to_decimal(floa1[i], &dec));
     }
     //only 7 digits
     float inp[] = {12345678901234, 0.1234567890123, 9999999999, 55556666666, 2222.33333334, 777.6666};
     float exp[] = {1234567, 0.1234567, 1000000, 5555666, 2222.333, 777.6666};
-    for (int i = 0; i < (int) sizeof(inp) / sizeof(float); i++) {
+    for (int i = 0; i < (int) (sizeof(inp) / sizeof(float)); i++) {
         s21_from_float_to_decimal(inp[i], &dec);
         s21_from_decimal_to_float(dec, &dec_float_real);
         ck_assert_float_eq(exp[i], dec_float_real);
@@ -53,7 +52,7 @@ START_TEST(float_dec_to_int_test) {
     int real;
     float inp[] = {12.2, 12312.122, 1231.211, 123143.23442};
     int expec[] = {12, 12312, 1231, 123143};
-    for(int i = 0; i < sizeof(inp) / sizeof(int); i ++){
+    for(int i = 0; i < (int) (sizeof(inp) / sizeof(int)); i ++){
         s21_from_float_to_decimal(inp[i], &dec);
         s21_from_decimal_to_int(dec, &real);
         ck_assert_int_eq(real, expec[i]);
@@ -82,12 +81,4 @@ Suite *dec_int_float_suit() {
     tcase_add_test(tcore, float_dec_to_int_test);
     suite_add_tcase(s, tcore);
     return s;
-}
-int main() {
-    Suite *s = dec_int_suit();
-    SRunner *sr = srunner_create(s);
-    srunner_add_suite(sr, dec_float_suit());
-    srunner_add_suite(sr, dec_int_float_suit());
-    srunner_run_all(sr, CK_NORMAL);
-    return 0;
 }
