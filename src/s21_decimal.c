@@ -4,8 +4,8 @@
 // int main() {
 //   s21_decimal result;
 //   int res = s21_div(
-//       (s21_decimal){{0x014CF9BF, 0x00000000, 0x00000000, 0x80020000}},
-//       (s21_decimal){{0x9336DD9D, 0x00000032, 0x00000000, 0x80020000}},
+//       (s21_decimal){{0x0098967F, 0x00000000, 0x00000000, 0x00070000}},
+//       (s21_decimal){{0x3B9AC60D, 0x00000000, 0x00000000, 0x80090000}},
 //       &result);
 
 //   printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
@@ -86,34 +86,9 @@ int increase_exponent(s21_decimal *value) {
   return res;
 }
 
-void last_prelast(s21_decimal value, int *last, int *prelast) {
-  *last = (value.bits[0] + value.bits[1] + value.bits[2]) % 10;
-  *prelast = (value.bits[0] + value.bits[1] + value.bits[2]) / 10 % 10;
-}
-
-void banking_rounding(s21_decimal *value, int dont_divide) {
-  int last, pre_last;
-  last_prelast(*value, &last, &pre_last);
-  if (!dont_divide) {
-    s21_div(*value, (s21_decimal){{10, 0, 0, 0}}, value);
-  }
-  s21_decimal one = (s21_decimal){{1, 0, 0, value->bits[3]}};
-  if (get_sign(*value) && last) {
-    s21_sub(*value, one, value);
-  } else if ((getBit(pre_last, 0) && (last > 4)) ||
-             (!getBit(pre_last, 0) &&
-              (last > 5))) {  // odd prelast  with 5...9 last or even
-    // prelast with 6...9 last
-    s21_add(*value, one, value);
-  }
-}
-
 int decrease_exponent(s21_decimal *value) {
   int last = div_by_10(*value, value, 0);
   value->bits[3] -= (1 << 16);
-  if (get_exp(*value) < 0) {
-    banking_rounding(value, 0);
-  }
   return last;
 }
 
@@ -130,6 +105,26 @@ int mul_by_10(s21_decimal *value) {
   } else {
     res = 1;
   }
+  return res;
+}
+
+int big_mul_by_10(s21_big_decimal *value) {
+  int res = 0;
+  s21_big_decimal value_2 = (s21_big_decimal){
+      {value->bits[0] << 1, (value->bits[1] << 1) | getBit(value->bits[0], 31),
+       (value->bits[2] << 1) | getBit(value->bits[1], 31),
+       (value->bits[3] << 1) | getBit(value->bits[2], 31),
+       (value->bits[4] << 1) | getBit(value->bits[3], 31),
+       (value->bits[5] << 1) | getBit(value->bits[4], 31)},
+      0};
+  s21_big_decimal value_8 = (s21_big_decimal){
+      {value->bits[0] << 3, (value->bits[1] << 3) | (value->bits[0] >> 29),
+       (value->bits[2] << 3) | (value->bits[1] >> 29),
+       (value->bits[3] << 3) | (value->bits[2] >> 29),
+       (value->bits[4] << 3) | (value->bits[3] >> 29),
+       (value->bits[5] << 3) | (value->bits[4] >> 29)},
+      0};
+  big_add(value_2, value_8, value);
   return res;
 }
 
@@ -385,6 +380,9 @@ int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
       int cur_exp = get_exp(value_1) - get_exp(value_2);
       cur_exp = remainder_div(value_1, value_2, result);
       result->bits[3] |= (cur_sgn << 31 | cur_exp << 16);
+      if (cur_exp < 0) {
+        res = 1 + cur_sgn;
+      }
     }
   }
   return res;
@@ -396,15 +394,12 @@ int big_div_by_10(s21_big_decimal value, s21_big_decimal *result) {
   unsigned long buf3 = 0;
   unsigned long buf4 = 0;
   unsigned long buf5 = 0;
-
   result->bits[5] = value.bits[5] / 10;
   buf1 =
       ((unsigned long)value.bits[5] % 10) * ((unsigned long)__UINT32_MAX__ + 1);
-
   result->bits[4] = (((unsigned long)value.bits[4] + buf1) / 10);
   buf2 = (((unsigned long)value.bits[4] + buf1) % 10) *
          ((unsigned long)__UINT32_MAX__ + 1);
-
   result->bits[3] = (((unsigned long)value.bits[3] + buf2) / 10);
   buf3 = (((unsigned long)value.bits[3] + buf2) % 10) *
          ((unsigned long)__UINT32_MAX__ + 1);
@@ -436,21 +431,6 @@ int div_by_10(s21_decimal value, s21_decimal *result, int carry) {
   result->bits[0] = (((unsigned long)value.bits[0] + buf2) / 10);
   return ((unsigned long)value.bits[0] + buf2) % 10;
 }
-
-/////////////////////////////////////////////////////
-int mod_by_10(s21_decimal value) {
-  unsigned long buf1 = 0;
-  unsigned long buf2 = 0;
-  buf1 =
-      ((unsigned long)value.bits[2] % 10) * ((unsigned long)__UINT32_MAX__ + 1);
-
-  buf2 = (((unsigned long)value.bits[1] + buf1) % 10) *
-         ((unsigned long)__UINT32_MAX__ + 1);
-
-  return ((unsigned long)value.bits[0] + buf2) % 10;
-}
-
-/////////////////////////////////////////////////////
 
 int remainder_div(s21_decimal value_1, s21_decimal value_2,
                   s21_decimal *result) {
@@ -487,21 +467,50 @@ int remainder_div(s21_decimal value_1, s21_decimal value_2,
       cur_exp++;
     }
   }
-  if (cur_exp == 28) {
-    // int l = last.bits[0];
-    // s21_decimal templ = *result;
-    // if (s21_is_less(value_1, value_2) && (!(result->bits[2] >> 28))) {
-    //   mul_by_10(&templ);
-    // }
+  if ((result->bits[2] >> 28) || (cur_exp >= 28)) {
+    round_after_division(result, &cur_exp, max_shift, value_1, value_2);
+  }
+  result->bits[3] = 0;
+  return cur_exp;
+}
+
+void round_after_division(s21_decimal *result, int *cur_exp, int max_shift,
+                          s21_decimal value_1, s21_decimal value_2) {
+  s21_decimal copy = *result;
+  s21_big_decimal big_result = (s21_big_decimal){
+      {result->bits[0], result->bits[1], result->bits[2], 0, 0}, 0};
+  for (int i = 0; i <= 28 - *cur_exp; i++) {
+    mul_by_10(&value_1);
+    big_mul_by_10(&big_result);
+  }
+  while (s21_is_greater_or_equal(value_1, value_2)) {
+    s21_decimal value_to_add = value_2;
+    s21_decimal tmp = value_2;
+    int q = 0;
+    while (s21_is_greater_or_equal(value_1, value_to_add) && q < max_shift &&
+           !getBit(result->bits[2], 31)) {
+      shift(&value_to_add);
+      if (q != 0) {
+        shift(&tmp);
+      }
+      q++;
+    }
+    s21_big_decimal value = (s21_big_decimal){{0, 0, 0, 0, 0, 0}, 0};
+    value.bits[(q - 1) / 32] = (1 << ((q - 1) % 32));
+    big_add(big_result, value, &big_result);
+    s21_sub(value_1, tmp, &value_1);
+  }
+  int exp = big_decimal_to_decimal(big_result, result);
+  if (*cur_exp == 28 && (exp == (28 - *cur_exp))) {
     int last = div_by_10(*result, result, 0);
     if ((getBit(result->bits[0], 0) && (last == 5)) || (last > 5) ||
         (get_sign(*result) && last)) {
       s21_add(*result, (s21_decimal){{1, 0, 0, result->bits[3]}}, result);
     }
-    // cur_exp--;
   }
-  result->bits[3] = 0;
-  return cur_exp;
+  if (copy.bits[2] != result->bits[2]) {
+    (*cur_exp)++;
+  }
 }
 
 void big_shift(s21_big_decimal *value) {

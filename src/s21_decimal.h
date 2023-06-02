@@ -26,9 +26,8 @@ void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
 int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
 int mul_by_10(s21_decimal *value);
+int big_mul_by_10(s21_big_decimal *value);
 int decrease_exponent(s21_decimal *value);
-void banking_rounding(s21_decimal *value, int dont_divide);
-void last_prelast(s21_decimal value, int *last, int *prelast);
 void basic_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
 int overflow_check(s21_decimal value_1, s21_decimal value_2);
 int remainder_div(s21_decimal value_1, s21_decimal value_2,
@@ -45,7 +44,8 @@ int big_decimal_to_decimal(s21_big_decimal long_result, s21_decimal *result);
 void remainder_big_div(s21_big_decimal value_1, s21_big_decimal value_2,
                        s21_big_decimal *result);
 int div_by_10(s21_decimal value, s21_decimal *result, int carry);
-int mod_by_10(s21_decimal value);
+void round_after_division(s21_decimal *result, int *cur_exp, int max_shift,
+                          s21_decimal value_1, s21_decimal value_2);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
