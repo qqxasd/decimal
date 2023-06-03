@@ -1,6 +1,8 @@
 #include <check.h>
+#include <stdio.h>
 
-#include "s21_decimal.h"
+#include "./../s21_decimal.h"
+#include "unit_tests.h"
 
 static s21_decimal num1[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
@@ -51,7 +53,7 @@ static s21_decimal num1[] = {
 
 static s21_decimal num2[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
-    {{0x00000006, 0x00000000, 0x00000000, 0x000F0000}},  // 0.000000000000005
+    {{0x00000006, 0x00000000, 0x00000000, 0x000F0000}},  // 0.000000000000006
     {{0x00000064, 0x00000000, 0x00000000, 0x00000000}},  // 100
     {{0x00004DA6, 0x00000000, 0x00000000, 0x00020000}},  // 198.78
     {{0x164214B7, 0x00000028, 0x00000000, 0x00040000}},  // 17217212.1271
@@ -97,19 +99,19 @@ static s21_decimal result[] = {
     {{0x00000023, 0x00000000, 0x00000000, 0x00010000}},  // 3.5
     {{0xAE7C05F9, 0x00000B1C, 0x00000000, 0x00070000}},  // 1221781.4353401
     {{0x4CCCCCCD, 0xB3333333, 0x19999999,
-      0x801B0000}},  //-7.922816253271108167154846925        не проходит
+      0x801B0000}},  //-7.922816253271108167154846925
     {{0x4CCCCCCD, 0xB3333333, 0x19999999,
-      0x000D0000}},  // 792281625327110.8167154846925   не проходит
+      0x000D0000}},  // 792281625327110.8167154846925
     {{0x00000002, 0x00000000, 0x00000000,
       0x001C0000}},  // 0.0000000000000000000000000002
     {{0x4E81E240, 0x00000918, 0x00000000,
       0x001C0000}},  // 0.0000000000000010000001000000
     {{0x80000000, 0x80000000, 0x80000000,
-      0x00000000}},  // 39614081266355540835774234624     не проходит
+      0x00000000}},  // 39614081266355540835774234624
     {{0x9999999A, 0x99999999, 0x19999999,
-      0x00000000}},  // 7922816251426433759354395034    не проходит
+      0x00000000}},  // 7922816251426433759354395034
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950335   не проходит
+      0x00000000}},  // 79228162514264337593543950335
     {{0x3015EDC5, 0xD46A37C7, 0x0000000B,
       0x800B0000}},  //-2182202924.23021882821
     {{0x75F2326E, 0x3B8F737F, 0x291B2868,
@@ -125,21 +127,19 @@ static s21_decimal result[] = {
     {{0x9F400000, 0x563581D8, 0x3E14F385,
       0x00130000}},  // 1921339912.0000000000000000000
     {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950334      // выдаёт первое
-                     // число, скорее всего проблема в округлении
+      0x00000000}},  // 79228162514264337593543950334
     {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950334      // вообще неправильно
+      0x00000000}},  // 79228162514264337593543950334
     {{0xFFFFFFFD, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950333      // аналогичный ответ
+      0x00000000}},  // 79228162514264337593543950333
     {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950334       // а тут правильно
-                     // XD
+      0x00000000}},  // 79228162514264337593543950334
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950335     //неправильно
+      0x00000000}},  // 79228162514264337593543950335
     {{0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF,
-      0x00000000}},  // 79228162514264337593543950334     // неправильно
+      0x00000000}},  // 79228162514264337593543950334
 };
-// эти не проверял
+
 static s21_decimal err_num1[] = {
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
       0x00000000}},  // 79228162514264337593543950335
@@ -178,7 +178,7 @@ static int err_result[] = {
     1, 1, 1, 1, 2, 2, 2, 2,
 };
 
-START_TEST(s21_decimal_add_test) {
+START_TEST(test) {
   for (size_t i = 0; i < sizeof(num1) / sizeof(s21_decimal); ++i) {
     s21_decimal tmp;
     int ret = s21_add(num1[i], num2[i], &tmp);
@@ -192,48 +192,31 @@ START_TEST(s21_decimal_add_test) {
 }
 END_TEST
 
-START_TEST(s21_decimal_sub_test) {
-  s21_decimal decimal11, decimal12, res1, res11;
-  decimal11 = (s21_decimal){{0x00000000, 0x0FFFFFFF, 0x7FFFFFFF, 0x00100000}};
-  decimal12 = (s21_decimal){{0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFF1, 0x00090000}};
-  res1 = (s21_decimal){{0x7FFFFFFF, 0x7FFFFFFF, 0x7FFFFFF1, 0x00090000}};
-  s21_sub(decimal11, decimal12, &res11);
-  ck_assert_int_eq(res1.bits[0], res11.bits[0]);
-  ck_assert_int_eq(res1.bits[1], res11.bits[1]);
-  ck_assert_int_eq(res1.bits[2], res11.bits[2]);
-  ck_assert_int_eq(res1.bits[3], res11.bits[3]);
+START_TEST(error_test) {
+  for (size_t i = 0; i < sizeof(err_num1) / sizeof(s21_decimal); ++i) {
+    s21_decimal tmp;
+    int ret = s21_add(err_num1[i], err_num2[i], &tmp);
+    if (tmp.bits[0] == 0) {
+      tmp.bits[0] = 1;
+    }
+
+    ck_assert_int_eq(ret, err_result[i]);
+  }
 }
 END_TEST
 
-Suite *s_s21_decimal_add() {
+Suite *suite_add(void) {
   Suite *s;
-  TCase *tc_add;
-  s = suite_create("add_suit");
-  tc_add = tcase_create("tc_add");
-  tcase_add_test(tc_add, s21_decimal_add_test);
-  suite_add_tcase(s, tc_add);
-  return s;
-}
+  TCase *tc;
 
-Suite *s_s21_decimal_sub() {
-  Suite *s;
-  TCase *tc_sub;
-  s = suite_create("sub_suit");
-  tc_sub = tcase_create("tc_sub");
-  tcase_add_test(tc_sub, s21_decimal_sub_test);
-  suite_add_tcase(s, tc_sub);
-  return s;
-}
+  s = suite_create("s21_add");
+  tc = tcase_create("s21_add");
 
-int main() {
-  int number_failed;
-  SRunner *sr;
-  sr = srunner_create(s_s21_decimal_add());
-  srunner_add_suite(sr, s_s21_decimal_sub());
+  if (s != NULL && tc != NULL) {
+    tcase_add_test(tc, test);
+    tcase_add_test(tc, error_test);
+    suite_add_tcase(s, tc);
+  }
 
-  srunner_run_all(sr, CK_NORMAL);
-  number_failed = srunner_ntests_failed(sr);
-  srunner_free(sr);
-
-  return (number_failed == 0) ? 0 : 1;
+  return (s);
 }

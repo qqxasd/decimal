@@ -1,8 +1,8 @@
 #ifndef S21_DECIMAL_H
 #define S21_DECIMAL_H
 #define MAX_DEC_VALUE 7.9228162514264337593543950335e28
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
 typedef struct {
   unsigned int bits[4];
@@ -19,18 +19,33 @@ int s21_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 int s21_div(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);  //
 void equal_exponents(s21_decimal *value_1, s21_decimal *value_2);
-void basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
-               int *res);
+int basic_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
+              int *res);
 void basic_sub(s21_decimal value_1, s21_decimal value_2, s21_decimal *result,
                int *res);
 int getBit(unsigned int num, int pos);
 int increase_exponent(s21_decimal *value);
-void decrease_exponent(s21_decimal *value);
-void banking_rounding(s21_decimal *value);
-// void shift_decimal(s21_decimal *value, int shift);
-// int normalize_long_decimal(s21_decimal little, s21_decimal big,
-//                            s21_decimal *result);
-// void div_long(s21_decimal *little, s21_decimal *big);
+int mul_by_10(s21_decimal *value);
+int big_mul_by_10(s21_big_decimal *value);
+int decrease_exponent(s21_decimal *value);
+void basic_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int overflow_check(s21_decimal value_1, s21_decimal value_2);
+int remainder_div(s21_decimal value_1, s21_decimal value_2,
+                  s21_decimal *result);
+void shift(s21_decimal *value);
+void big_shift(s21_big_decimal *value);
+void big_add(s21_big_decimal value_1, s21_big_decimal value_2,
+             s21_big_decimal *result);
+void big_mul(s21_big_decimal value_1, s21_big_decimal value_2,
+             s21_big_decimal *result);
+int big_div_by_10(s21_big_decimal value, s21_big_decimal *result);
+int long_mul(s21_decimal value_1, s21_decimal value_2, s21_decimal *result);
+int big_decimal_to_decimal(s21_big_decimal long_result, s21_decimal *result);
+void remainder_big_div(s21_big_decimal value_1, s21_big_decimal value_2,
+                       s21_big_decimal *result);
+int div_by_10(s21_decimal value, s21_decimal *result, int carry);
+void round_after_division(s21_decimal *result, int *cur_exp, int max_shift,
+                          s21_decimal value_1, s21_decimal value_2);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_is_less(s21_decimal, s21_decimal);  // Сравнение Тим (кайфует )
