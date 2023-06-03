@@ -2,7 +2,6 @@
 #define S21_DECIMAL_H
 #define MAX_DEC_VALUE 7.9228162514264337593543950335e28
 #include <math.h>
-#include <stdio.h>
 
 typedef struct {
   unsigned int bits[4];

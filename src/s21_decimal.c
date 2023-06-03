@@ -1,16 +1,6 @@
 #include "s21_decimal.h"
 
-#include <string.h>
-// int main() {
-//   s21_decimal result;
-//   int res = s21_div(
-//       (s21_decimal){{0x0098967F, 0x00000000, 0x00000000, 0x00070000}},
-//       (s21_decimal){{0x3B9AC60D, 0x00000000, 0x00000000, 0x80090000}},
-//       &result);
-
-//   printf("RES = %d(0x%X, 0x%X, 0x%X, 0x%X),\n", res, result.bits[0],
-//          result.bits[1], result.bits[2], result.bits[3]);
-// }
+// #include <string.h>
 
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
