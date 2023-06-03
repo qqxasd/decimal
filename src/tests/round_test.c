@@ -53,7 +53,6 @@ static s21_decimal num1[] = {
       0x00150000}},  // 79228162.514264337593543950335 (31)
 };
 
-
 // RESULT OF ROUND
 static s21_decimal result_round[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0 (0)
@@ -93,13 +92,13 @@ static s21_decimal result_round[] = {
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  // -1 (28)
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  // -1 (29)
     {{0x00000000, 0x00000000, 0x00000000, 0x80000000}},  // -0 (30)
-    {{0x04b8ed02, 0x00000000, 0x00000000, 0x00000000}}, // 79228162 (31)
+    {{0x04b8ed02, 0x00000000, 0x00000000, 0x00000000}},  // 79228162 (31)
 };
 
 START_TEST(s21_decimal_round_test) {
   for (size_t i = 0; i < 32; ++i) {
-    s21_decimal tmp = {{0x00000000, 0x00000000, 0x00000000, 0x00000000}};
-        printf("a\r");
+    s21_decimal tmp = {0};
+    // printf("aa\r");
     int ret = s21_round(num1[i], &tmp);
     ck_assert_int_eq(tmp.bits[0], result_round[i].bits[0]);
     ck_assert_int_eq(tmp.bits[1], result_round[i].bits[1]);

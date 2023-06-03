@@ -31,5 +31,4 @@ Suite *s_s21_decimal_round();
 
 void run_testcase(Suite *testcase);
 
-
 #endif  // SRC_TESTS_TESTS_H_

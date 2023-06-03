@@ -105,7 +105,6 @@ START_TEST(s21_decimal_floor_test) {
 }
 END_TEST
 
-
 Suite *s_s21_decimal_floor() {
   Suite *s;
   TCase *tc_floor;

@@ -15,9 +15,9 @@ int main(void) {
                          dec_float_suit(),
                          dec_int_float_suit(),
                          s_s21_decimal_negate(),
-                          s_s21_decimal_floor(),
-                          s_s21_decimal_round(),
-                          s_s21_decimal_truncate(),
+                         s_s21_decimal_floor(),
+                         s_s21_decimal_round(),
+                         s_s21_decimal_truncate(),
                          NULL};
 
   for (Suite **current_testcase = list_cases; *current_testcase != NULL;

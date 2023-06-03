@@ -107,7 +107,6 @@ START_TEST(s21_decimal_truncate_test) {
 }
 END_TEST
 
-
 Suite *s_s21_decimal_truncate() {
   Suite *s;
   TCase *tc_truncate;
