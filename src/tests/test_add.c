@@ -1,7 +1,7 @@
 #include <check.h>
 #include <stdio.h>
 
-#include "./../s21_decimal.h"
+#include "../s21_decimal.h"
 #include "unit_tests.h"
 
 static s21_decimal num1[] = {

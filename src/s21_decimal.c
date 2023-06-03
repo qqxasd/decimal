@@ -847,7 +847,15 @@ int s21_round(s21_decimal value, s21_decimal *result) {
   for (int i = 0; i < exp; i++) {
     remainder = div_by_10(*result, result, 0);
   }
-  if (remainder >= 5) {
+  if(remainder == 5 && getBit(result->bits[0], 0)) {
+    s21_decimal one = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};  // 1
+    if (get_sign(value))
+      s21_sub(*result, one, result);
+    else
+      s21_add(*result, one, result);
+
+  }
+  if (remainder > 5) {
     s21_decimal one = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};  // 1
     if (get_sign(value))
       s21_sub(*result, one, result);

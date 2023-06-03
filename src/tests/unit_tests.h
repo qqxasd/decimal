@@ -24,6 +24,12 @@ Suite *dec_int_suit();
 Suite *dec_float_suit();
 Suite *dec_int_float_suit();
 
+Suite *s_s21_decimal_truncate();
+Suite *s_s21_decimal_negate();
+Suite *s_s21_decimal_floor();
+Suite *s_s21_decimal_round();
+
 void run_testcase(Suite *testcase);
+
 
 #endif  // SRC_TESTS_TESTS_H_
