@@ -1,7 +1,5 @@
 #include "s21_decimal.h"
 
-// #include <string.h>
-
 int setBit(unsigned int num, int pos) { return (num | (1 << pos)); }
 
 int getBit(unsigned int num, int pos) { return ((num & (1 << pos)) >> pos); }
@@ -131,8 +129,7 @@ int s21_add(s21_decimal value_1, s21_decimal value_2, s21_decimal *result) {
     }
   } else {
     value_2.bits[3] = toggleBit(value_2.bits[3], 31);
-    if ((s21_is_greater_or_equal(value_1, value_2) && !get_sign(value_1)) ||
-        (s21_is_less_or_equal(value_1, value_2) && get_sign(value_1))) {
+    if (s21_is_greater_or_equal(value_1, value_2)) {
       basic_sub(value_1, value_2, result, &res);
     } else {
       basic_sub(value_2, value_1, result, &res);
