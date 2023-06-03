@@ -609,6 +609,22 @@ int normalize_big(s21_big_decimal *x1, s21_big_decimal *x2) {
   return check;
 }
 
+int s21_get_bit(s21_decimal value, int index) {
+  int num_int = index / 32;
+  int num_bit = index % 32;
+  return (value.bits[num_int] & (1u << num_bit)) >> num_bit;
+}
+
+void s21_print_decmal(s21_decimal value) {
+  for (int i = 127; i >= 0; i--) {
+    printf("%d", s21_get_bit(value, i));
+    if (i % 32 == 0) {
+      printf(" ");
+    }
+  }
+  printf("\n");
+}
+
 int s21_is_equal(s21_decimal value_1, s21_decimal value_2) {
   int res = 0;
   if (value_1.bits[0] == value_2.bits[0] &&

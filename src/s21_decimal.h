@@ -65,6 +65,9 @@ int is_zero(s21_decimal value);
 void set_bit(unsigned int *destination, unsigned int position,
              unsigned int value);
 
+int s21_get_bit(s21_decimal value, int index);
+void s21_print_decmal(s21_decimal value);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int s21_from_int_to_decimal(
@@ -93,4 +96,5 @@ int setBit(unsigned int num, int pos);
 int clearBit(unsigned int num, int pos);
 
 int toggleBit(unsigned int num, int pos);
+
 #endif
