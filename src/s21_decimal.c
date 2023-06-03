@@ -821,3 +821,81 @@ int s21_from_decimal_to_float(s21_decimal src, float *dst) {
   *dst /= pow(10, get_exp(src));
   return 0;
 }
+
+int s21_negate(s21_decimal value, s21_decimal *result) {
+  // Возвращает результат умножения указанного Decimal на -1.
+  if (get_sign(value))
+    (*result).bits[3] = clearBit(((*result).bits[3]), 31);
+  else
+    (*result).bits[3] = setBit(((*result).bits[3]), 31);
+  int bit;
+  for (int i = 0; i < (4 * 32) - 1; i++) {
+    bit = getBit(value.bits[i / 32], i % 32);
+    if (bit) (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
+  }
+
+  return 0;
+}
+
+int s21_truncate(s21_decimal value, s21_decimal *result) {
+  // Возвращает целые цифры указанного Decimal числа; любые дробные цифры
+  // отбрасываются, включая конечные нули.
+  int exp = get_exp(value);
+  if (get_sign(value)) (*result).bits[3] = setBit((*result).bits[3], 31);
+  int bit;
+  for (int i = 0; i < 3 * 32; i++) {
+    bit = getBit(value.bits[i / 32], i % 32);
+    if (bit) (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
+  }
+  for (int i = 0; i < exp; i++) {
+    div_by_10(*result, result, 0);
+  }
+  return 0;
+}
+
+int s21_floor(s21_decimal value, s21_decimal *result) {
+  // Округляет указанное Decimal число до ближайшего целого числа в сторону
+  // отрицательной бесконечности.
+  int exp = get_exp(value);
+  if (get_sign(value)) (*result).bits[3] = setBit((*result).bits[3], 31);
+  int bit;
+  for (int i = 0; i < 3 * 32; i++) {
+    bit = getBit(value.bits[i / 32], i % 32);
+    if (bit) (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
+  }
+  int remainder = 0;
+  int tmp;
+  for (int i = 0; i < exp; i++) {
+    tmp = div_by_10(*result, result, 0);
+    if (tmp) remainder = tmp;
+  }
+
+  if (remainder != 0) {
+    s21_decimal one = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};  // 1
+    if (get_sign(value)) s21_sub(*result, one, result);
+  }
+  return 0;
+}
+
+int s21_round(s21_decimal value, s21_decimal *result) {
+  // Округляет Decimal до ближайшего целого числа.
+  int exp = get_exp(value);
+  if (get_sign(value)) (*result).bits[3] = setBit((*result).bits[3], 31);
+  int bit;
+  for (int i = 0; i < 3 * 32; i++) {
+    bit = getBit(value.bits[i / 32], i % 32);
+    if (bit) (*result).bits[i / 32] = setBit((*result).bits[i / 32], i % 32);
+  }
+  int remainder;
+  for (int i = 0; i < exp; i++) {
+    remainder = div_by_10(*result, result, 0);
+  }
+  if (remainder >= 5) {
+    s21_decimal one = {{0x00000001, 0x00000000, 0x00000000, 0x00000000}};  // 1
+    if (get_sign(value))
+      s21_sub(*result, one, result);
+    else
+      s21_add(*result, one, result);
+  }
+  return 0;
+}
