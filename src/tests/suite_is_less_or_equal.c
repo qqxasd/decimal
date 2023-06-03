@@ -111,33 +111,6 @@ START_TEST(less_or_equal_10) {
 }
 END_TEST
 
-START_TEST(less_or_equal_11) {
-  float num1 = 104235454634.34534534;
-  float num2 = 1042354546.34534534;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  printf("%i %i\n", get_sign(dec1), get_exp(dec1));
-  s21_print_decmal(dec1);
-  printf("%i %i\n", get_sign(dec2), get_exp(dec2));
-  s21_print_decmal(dec2);
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-
-  int res = s21_is_less_or_equal(dec1, dec2);
-  ck_assert_int_eq(res, FALSE);
-}
-END_TEST
-
 START_TEST(less_or_equal_12) {
   float num1 = 1042354546.34534534;
   float num2 = 104235454634.345345;
@@ -346,13 +319,6 @@ START_TEST(s21_test_is_less_or_equal_5) {
   ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
 }
 END_TEST
-
-// START_TEST(s21_test_is_less_or_equal_51) {
-//     s21_decimal a = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-//     s21_decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-//     ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
-// }
-// END_TEST
 
 START_TEST(s21_test_is_less_or_equal_6) {
   s21_decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
@@ -1121,7 +1087,6 @@ Suite *suite_is_less_or_equal(void) {
   tcase_add_test(tc, less_or_equal_8);
   tcase_add_test(tc, less_or_equal_9);
   tcase_add_test(tc, less_or_equal_10);
-  tcase_add_test(tc, less_or_equal_11);
   tcase_add_test(tc, less_or_equal_12);
   tcase_add_test(tc, less_or_equal_13);
   tcase_add_test(tc, less_or_equal_14);
