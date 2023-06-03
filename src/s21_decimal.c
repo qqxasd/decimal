@@ -611,11 +611,6 @@ int normalize_big(s21_big_decimal *x1, s21_big_decimal *x2) {
 
 int s21_is_equal(s21_decimal value_1, s21_decimal value_2) {
   int res = 0;
-  printf("%i %i %i %i %i\n", , value_1.bits[0] == value_2.bits[0],
-         value_1.bits[1] == value_2.bits[1], value_1.bits[2] == value_2.bits[2],
-         get_sign(value_1) == get_sign(value_2),
-         get_exp(value_1) == get_exp(value_2));
-
   if (value_1.bits[0] == value_2.bits[0] &&
       value_1.bits[1] == value_2.bits[1] &&
       value_1.bits[2] == value_2.bits[2] &&
