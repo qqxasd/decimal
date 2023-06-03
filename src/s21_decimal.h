@@ -64,7 +64,6 @@ void decimal_to_big_decimal(s21_decimal from, s21_big_decimal *to);
 int is_zero(s21_decimal value);
 void set_bit(unsigned int *destination, unsigned int position,
              unsigned int value);
-void printBits(size_t const size, void const *const ptr);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

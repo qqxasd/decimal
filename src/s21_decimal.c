@@ -80,9 +80,6 @@ int increase_exponent(s21_decimal *value) {
   } else {
     res = 0;
   }
-  if (get_exp((*value)) > 28 || is_zero(*value)) {
-    res = 0;
-  }
   return res;
 }
 
@@ -527,19 +524,6 @@ void shift(s21_decimal *value) {
   *value = (s21_decimal){
       {value->bits[0] << 1, (value->bits[1] << 1) | (value->bits[0] >> 31),
        (value->bits[2] << 1) | (value->bits[1] >> 31), value->bits[3]}};
-}
-
-void printBits(size_t const size, void const *const ptr) {
-  unsigned char *b = (unsigned char *)ptr;
-  unsigned char byte;
-  int i, j;
-  for (i = size - 1; i >= 0; i--) {
-    for (j = 7; j >= 0; j--) {
-      byte = (b[i] >> j) & 1;
-      printf("%u", byte);
-    }
-  }
-  printf("\n");
 }
 
 void set_bit(unsigned int *destination, unsigned int position,
