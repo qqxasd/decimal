@@ -355,19 +355,6 @@ START_TEST(s21_test_is_less_or_equal_10) {
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest01) {
-  // 2596
-  s21_decimal src1, src2;
-  src2.bits[0] = 0b00000000000000000000000000000011;
-  src2.bits[1] = 0b00000000000000000000000000000000;
-  src2.bits[2] = 0b00000000000000000000000000000000;
-  src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
-  int origin = 0;
-  ck_assert_int_eq(result, origin);
-}
-END_TEST
-
 START_TEST(s21_is_less_or_equalTest1) {
   // 3172
   s21_decimal src1, src2;
@@ -1113,7 +1100,6 @@ Suite *suite_is_less_or_equal(void) {
   tcase_add_test(tc, s21_test_is_less_or_equal_8);
   tcase_add_test(tc, s21_test_is_less_or_equal_9);
   tcase_add_test(tc, s21_test_is_less_or_equal_10);
-  tcase_add_test(tc, s21_is_less_or_equalTest01);
   tcase_add_test(tc, s21_is_less_or_equalTest1);
   tcase_add_test(tc, s21_is_less_or_equalTest2);
   tcase_add_test(tc, s21_is_less_or_equalTest3);
