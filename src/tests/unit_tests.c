@@ -14,10 +14,10 @@ int main(void) {
                          dec_int_suit(),
                          dec_float_suit(),
                          dec_int_float_suit(),
-                         s_s21_decimal_negate(),
-                         s_s21_decimal_floor(),
-                         s_s21_decimal_round(),
-                         s_s21_decimal_truncate(),
+                         suite_truncate(),
+                         suite_floor(),
+                         suite_negate(),
+                         suite_round(),
                          NULL};
 
   for (Suite **current_testcase = list_cases; *current_testcase != NULL;

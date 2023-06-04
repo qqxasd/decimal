@@ -19,15 +19,15 @@ Suite *suite_is_greater_or_equal(void);
 Suite *suite_is_not_equal(void);
 Suite *suite_is_less(void);
 Suite *suite_is_less_or_equal(void);
-
+Suite *suite_from_decimal_to_float(void);
 Suite *dec_int_suit();
 Suite *dec_float_suit();
 Suite *dec_int_float_suit();
 
-Suite *s_s21_decimal_truncate();
-Suite *s_s21_decimal_negate();
-Suite *s_s21_decimal_floor();
-Suite *s_s21_decimal_round();
+Suite *suite_truncate();
+Suite *suite_negate();
+Suite *suite_round();
+Suite *suite_floor();
 
 void run_testcase(Suite *testcase);
 
