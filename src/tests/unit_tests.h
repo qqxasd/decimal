@@ -3,7 +3,7 @@
 
 #include <check.h>
 
-#include "../s21_decimal.h"
+#include "../decimal.h"
 
 #define TRUE 1
 #define FALSE 0

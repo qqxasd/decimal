@@ -2,8 +2,8 @@
 
 #include "unit_tests.h"
 
-START_TEST(s21_is_greater_test) {
-  s21_decimal a, b;
+START_TEST(is_greater_test) {
+  decimal a, b;
 
   a.bits[0] = 0b00000000000000000000000000000010;
   a.bits[1] = 0b00000000000000000000000000000000;
@@ -13,251 +13,249 @@ START_TEST(s21_is_greater_test) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  ck_assert_int_eq(s21_is_greater(a, b), FALSE);
+  ck_assert_int_eq(is_greater(a, b), FALSE);
 
-  s21_decimal dec5 = {{12345, 0, 0, 0b00000000000001000000000000000000}};
-  s21_decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};
-  ck_assert_int_eq(s21_is_greater(dec5, dec6), 1);
-  ck_assert_int_eq(s21_is_greater(dec6, dec5), 0);
+  decimal dec5 = {{12345, 0, 0, 0b00000000000001000000000000000000}};
+  decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};
+  ck_assert_int_eq(is_greater(dec5, dec6), 1);
+  ck_assert_int_eq(is_greater(dec6, dec5), 0);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_1a) {
-  s21_decimal a = {{2, 0, 0, 0}};
-  s21_decimal b = {{1, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_1a) {
+  decimal a = {{2, 0, 0, 0}};
+  decimal b = {{1, 0, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_2a) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{0, 0, 0, 0}};
+START_TEST(is_greater_test_2a) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{0, 0, 0, 0}};
   // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[0],
   // a.bits[1],
   //        a.bits[2], a.bits[3], b.bits[0], b.bits[1], b.bits[2], b.bits[3]);
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_2_1a) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT - 1, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_2_1a) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{MAX_U_INT - 1, 0, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_3a) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), FALSE);
+START_TEST(is_greater_test_3a) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 0, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), FALSE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_4a) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 1, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), FALSE);
+START_TEST(is_greater_test_4a) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 1, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), FALSE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_4_1a) {
-  s21_decimal a = {{MAX_U_INT, 1, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_4_1a) {
+  decimal a = {{MAX_U_INT, 1, 0, 0}};
+  decimal b = {{MAX_U_INT, 0, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_5a) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT - 1, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_5a) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, 0, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT - 1, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_5_1a) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), FALSE);
+START_TEST(is_greater_test_5_1a) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, 0, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), FALSE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_6a) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_6a) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_7a) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_7a) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_8a) {
-  s21_decimal a = {{0, MAX_U_INT, MAX_U_INT, 0}};
-  s21_decimal b = {{0, MAX_U_INT, MAX_U_INT - 1, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_8a) {
+  decimal a = {{0, MAX_U_INT, MAX_U_INT, 0}};
+  decimal b = {{0, MAX_U_INT, MAX_U_INT - 1, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_9a) {
-  s21_decimal a = {{0, 0, MAX_U_INT, 0}};
-  s21_decimal b = {{0, 0, MAX_U_INT - 1, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), TRUE);
+START_TEST(is_greater_test_9a) {
+  decimal a = {{0, 0, MAX_U_INT, 0}};
+  decimal b = {{0, 0, MAX_U_INT - 1, 0}};
+  ck_assert_int_eq(is_greater(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_10a) {
-  s21_decimal a = {{0, 0, 0, 0}};
-  s21_decimal b = {{0, 0, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_greater(a, b), FALSE);
+START_TEST(is_greater_test_10a) {
+  decimal a = {{0, 0, 0, 0}};
+  decimal b = {{0, 0, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_greater(a, b), FALSE);
 }
 END_TEST
 
-// START_TEST(s21_is_greater_test_1b) {
+// START_TEST(is_greater_test_1b) {
 //   float num1 = 1.375342323523;
 //   float num2 = 1.39;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_2b) {
+// START_TEST(is_greater_test_2b) {
 //   float num1 = 1.39;
 //   float num2 = 1.39;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_3b) {
+// START_TEST(is_greater_test_3b) {
 //   float num1 = 1.39;
 //   float num2 = -1.39;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, TRUE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_4b) {
+// START_TEST(is_greater_test_4b) {
 //   int num1 = 0;
 //   int num2 = 0;
-//   s21_decimal dec1, dec2;
-//   s21_from_int_to_decimal(num1, &dec1);
-//   s21_from_int_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_int_to_decimal(num1, &dec1);
+//   from_int_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_5b) {
+// START_TEST(is_greater_test_5b) {
 //   int num1 = 3;
 //   int num2 = 9;
-//   s21_decimal dec1, dec2;
-//   s21_from_int_to_decimal(num1, &dec1);
-//   s21_from_int_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_int_to_decimal(num1, &dec1);
+//   from_int_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_6b) {
+// START_TEST(is_greater_test_6b) {
 //   int num1 = -3;
 //   int num2 = -3;
-//   s21_decimal dec1, dec2;
-//   s21_from_int_to_decimal(num1, &dec1);
-//   s21_from_int_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_int_to_decimal(num1, &dec1);
+//   from_int_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_7b) {
+// START_TEST(is_greater_test_7b) {
 //   int num1 = -3;
 //   int num2 = 3;
-//   s21_decimal dec1, dec2;
-//   s21_from_int_to_decimal(num1, &dec1);
-//   s21_from_int_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_int_to_decimal(num1, &dec1);
+//   from_int_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_8b) {
+// START_TEST(is_greater_test_8b) {
 //   float num1 = -3.232446546;
 //   float num2 = -3.2;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_9b) {
+// START_TEST(is_greater_test_9b) {
 //   float num1 = -345.232446546;
 //   float num2 = -3.2;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, FALSE);
 // }
 // END_TEST
 
-// START_TEST(s21_is_greater_test_10b) {
+// START_TEST(is_greater_test_10b) {
 //   float num1 = -3.232323233232323233;
 //   float num2 = -34545124.232446543232446543;
-//   s21_decimal dec1, dec2;
-//   s21_from_float_to_decimal(num1, &dec1);
-//   s21_from_float_to_decimal(num2, &dec2);
-//   int res = s21_is_greater(dec1, dec2);
+//   decimal dec1, dec2;
+//   from_float_to_decimal(num1, &dec1);
+//   from_float_to_decimal(num2, &dec2);
+//   int res = is_greater(dec1, dec2);
 //   ck_assert_int_eq(res, 1);
 // }
 // END_TEST
 
-START_TEST(s21_is_greater_test_11b) {
-  s21_decimal dec5 = {
-      {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
-  s21_decimal dec6 = {
-      {12, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2;
-  ck_assert_int_eq(s21_is_greater(dec5, dec6), 1);
-  ck_assert_int_eq(s21_is_greater(dec6, dec5), 0);
+START_TEST(is_greater_test_11b) {
+  decimal dec5 = {
+      {12345, 0, 0, 0b00000000000001000000000000000000}};           //  1.2345
+  decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2;
+  ck_assert_int_eq(is_greater(dec5, dec6), 1);
+  ck_assert_int_eq(is_greater(dec6, dec5), 0);
 
-  s21_decimal dec7 = {
+  decimal dec7 = {
       {12345, 0, 0, 0b10000000000001000000000000000000}};  // -1.2345
-  s21_decimal dec8 = {{12, 0, 0, 0b00000000000000010000000000000000}};
-  //  1.2; ck_assert_int_eq(s21_is_greater(dec7, dec8), 0);
-  ck_assert_int_eq(s21_is_greater(dec8, dec7), 1);
+  decimal dec8 = {{12, 0, 0, 0b00000000000000010000000000000000}};
+  //  1.2; ck_assert_int_eq(is_greater(dec7, dec8), 0);
+  ck_assert_int_eq(is_greater(dec8, dec7), 1);
 
-  s21_decimal dec1 = {
+  decimal dec1 = {
       {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
-  s21_decimal dec2 = {{12, 0, 0, 0b00000000000000010000000000000000}};
-  //  1.2 ck_assert_int_eq(s21_is_greater(dec1, dec2), 1);
-  ck_assert_int_eq(s21_is_greater(dec2, dec1), 0);
+  decimal dec2 = {{12, 0, 0, 0b00000000000000010000000000000000}};
+  //  1.2 ck_assert_int_eq(is_greater(dec1, dec2), 1);
+  ck_assert_int_eq(is_greater(dec2, dec1), 0);
 
-  s21_decimal dec3 = {
-      {12345, 0, 0, 0b10000000000001000000000000000000}};  // -1.2345
-  s21_decimal dec4 = {
-      {12, 0, 0, 0b10000000000000010000000000000000}};  //   -1.2
-  ck_assert_int_eq(s21_is_greater(dec3, dec4), 0);
-  ck_assert_int_eq(s21_is_greater(dec4, dec3), 1);
+  decimal dec3 = {
+      {12345, 0, 0, 0b10000000000001000000000000000000}};           // -1.2345
+  decimal dec4 = {{12, 0, 0, 0b10000000000000010000000000000000}};  //   -1.2
+  ck_assert_int_eq(is_greater(dec3, dec4), 0);
+  ck_assert_int_eq(is_greater(dec4, dec3), 1);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_1) {
+START_TEST(is_greater_test_1) {
   // 3820
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 2;
   // src2 = 3;
 
@@ -269,15 +267,15 @@ START_TEST(s21_is_greater_test_1) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_2) {
+START_TEST(is_greater_test_2) {
   // 3838
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 3;
   // src2 = 2;
 
@@ -289,15 +287,15 @@ START_TEST(s21_is_greater_test_2) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_3) {
+START_TEST(is_greater_test_3) {
   // 3856
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 3;
   // src2 = 3;
 
@@ -309,15 +307,15 @@ START_TEST(s21_is_greater_test_3) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_4) {
+START_TEST(is_greater_test_4) {
   // 3874
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 2;
   // src2 = 0;
 
@@ -329,15 +327,15 @@ START_TEST(s21_is_greater_test_4) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_5) {
+START_TEST(is_greater_test_5) {
   // 3892
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0;
   // src2 = 3;
 
@@ -349,15 +347,15 @@ START_TEST(s21_is_greater_test_5) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_6) {
+START_TEST(is_greater_test_6) {
   // 3910
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 2;
   // src2 = 0;
 
@@ -369,15 +367,15 @@ START_TEST(s21_is_greater_test_6) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_7) {
+START_TEST(is_greater_test_7) {
   // 3928
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 6521;
   // src2 = 74121;
 
@@ -389,15 +387,15 @@ START_TEST(s21_is_greater_test_7) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_8) {
+START_TEST(is_greater_test_8) {
   // 3946
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 4;
   // src2 = 97623323;
 
@@ -409,15 +407,15 @@ START_TEST(s21_is_greater_test_8) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_9) {
+START_TEST(is_greater_test_9) {
   // 3964
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 65658654;
   // src2 = 5;
 
@@ -429,15 +427,15 @@ START_TEST(s21_is_greater_test_9) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_10) {
+START_TEST(is_greater_test_10) {
   // 3982
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -364748;
   // src2 = 1;
 
@@ -449,15 +447,15 @@ START_TEST(s21_is_greater_test_10) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_11) {
+START_TEST(is_greater_test_11) {
   // 4000
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 1;
   // src2 = 98745654321;
 
@@ -469,15 +467,15 @@ START_TEST(s21_is_greater_test_11) {
   b.bits[1] = 0b00000000000000000000000000010110;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_12) {
+START_TEST(is_greater_test_12) {
   // 4018
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -9878798789;
   // src2 = -3;
 
@@ -489,15 +487,15 @@ START_TEST(s21_is_greater_test_12) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b10000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_13) {
+START_TEST(is_greater_test_13) {
   // 4036
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 9999999999999999999;
   // src2 = 1;
 
@@ -509,15 +507,15 @@ START_TEST(s21_is_greater_test_13) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_14) {
+START_TEST(is_greater_test_14) {
   // 4054
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 18446744073709551615;
   // src2 = 1;
 
@@ -529,15 +527,15 @@ START_TEST(s21_is_greater_test_14) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_15) {
+START_TEST(is_greater_test_15) {
   // 4072
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 18446744073709551615.0;
   // src2 = 965453154;
 
@@ -549,15 +547,15 @@ START_TEST(s21_is_greater_test_15) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_16) {
+START_TEST(is_greater_test_16) {
   // 4090
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -545454512454545.35265454545645;
   // src2 = 54564654;
 
@@ -569,15 +567,15 @@ START_TEST(s21_is_greater_test_16) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_17) {
+START_TEST(is_greater_test_17) {
   // 4108
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -545454512454545.35265454545645;
   // src2 = -5.352654545456454545645464;
 
@@ -589,15 +587,15 @@ START_TEST(s21_is_greater_test_17) {
   b.bits[1] = 0b11111011111111011000100101101101;
   b.bits[2] = 0b00000000000001000110110101110111;
   b.bits[3] = 0b10000000000110000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_18) {
+START_TEST(is_greater_test_18) {
   // 4126
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 7961327845421.879754123131254;
   // src2 = 0;
 
@@ -609,15 +607,15 @@ START_TEST(s21_is_greater_test_18) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_19) {
+START_TEST(is_greater_test_19) {
   // 4144
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 12345677.987654345678987654346;
   // src2 = 87654323456.9876545678987653;
 
@@ -629,15 +627,15 @@ START_TEST(s21_is_greater_test_19) {
   b.bits[1] = 0b11110101101111000110111111000000;
   b.bits[2] = 0b00000010110101010000111100111111;
   b.bits[3] = 0b00000000000100000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_20) {
+START_TEST(is_greater_test_20) {
   // 4162
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -12345677.987654345678987654346;
   // src2 = 87654323456.9876545678987653;
 
@@ -649,15 +647,15 @@ START_TEST(s21_is_greater_test_20) {
   b.bits[1] = 0b11110101101111000110111111000000;
   b.bits[2] = 0b00000010110101010000111100111111;
   b.bits[3] = 0b00000000000100000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_21) {
+START_TEST(is_greater_test_21) {
   // 4180
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 12345677.987654345678987654346;
   // src2 = -87654323456.9876545678987653;
 
@@ -669,15 +667,15 @@ START_TEST(s21_is_greater_test_21) {
   b.bits[1] = 0b11110101101111000110111111000000;
   b.bits[2] = 0b00000010110101010000111100111111;
   b.bits[3] = 0b10000000000100000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_22) {
+START_TEST(is_greater_test_22) {
   // 4198
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -12345677.987654345678987654346;
   // src2 = -87654323456.9876545678987653;
 
@@ -689,15 +687,15 @@ START_TEST(s21_is_greater_test_22) {
   b.bits[1] = 0b11110101101111000110111111000000;
   b.bits[2] = 0b00000010110101010000111100111111;
   b.bits[3] = 0b10000000000100000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_23) {
+START_TEST(is_greater_test_23) {
   // 4216
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0;
   // src2 = 0;
 
@@ -709,15 +707,15 @@ START_TEST(s21_is_greater_test_23) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_24) {
+START_TEST(is_greater_test_24) {
   // 4234
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0;
   // src2 = 0;
 
@@ -729,15 +727,15 @@ START_TEST(s21_is_greater_test_24) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_25) {
+START_TEST(is_greater_test_25) {
   // 4252
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0;
   // src2 = 0;
 
@@ -749,15 +747,15 @@ START_TEST(s21_is_greater_test_25) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_26) {
+START_TEST(is_greater_test_26) {
   // 4270
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 79228162514264337593543950335;
   // src2 = -1;
 
@@ -769,15 +767,15 @@ START_TEST(s21_is_greater_test_26) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b10000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_27) {
+START_TEST(is_greater_test_27) {
   // 4288
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 7922816251427554395;
   // src2 = 65645646;
 
@@ -789,15 +787,15 @@ START_TEST(s21_is_greater_test_27) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_28) {
+START_TEST(is_greater_test_28) {
   // 4306
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 665464545;
   // src2 = 8798232189789785;
 
@@ -809,15 +807,15 @@ START_TEST(s21_is_greater_test_28) {
   b.bits[1] = 0b00000000000111110100000111110010;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_29) {
+START_TEST(is_greater_test_29) {
   // 4324
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 2.7986531268974139743;
   // src2 = 9.979623121254565121244554;
 
@@ -829,15 +827,15 @@ START_TEST(s21_is_greater_test_29) {
   b.bits[1] = 0b01110100000101000010011110100011;
   b.bits[2] = 0b00000000000010000100000101000100;
   b.bits[3] = 0b00000000000110000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_30) {
+START_TEST(is_greater_test_30) {
   // 4342
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -9798956154578676.797564534156;
   // src2 = -2156878451.854764;
 
@@ -849,15 +847,15 @@ START_TEST(s21_is_greater_test_30) {
   b.bits[1] = 0b00000000000001111010100110101011;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b10000000000001100000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_31) {
+START_TEST(is_greater_test_31) {
   // 4360
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0.5456465465486476846545465485;
   // src2 = 0.68985125146545154;
 
@@ -869,7 +867,7 @@ START_TEST(s21_is_greater_test_31) {
   b.bits[1] = 0b00000000111101010001010110011011;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000100010000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[3],
   // a.bits[2],
@@ -880,9 +878,9 @@ START_TEST(s21_is_greater_test_31) {
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_32) {
+START_TEST(is_greater_test_32) {
   // 4378
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -0.77545545454546589781;
   // src2 = 87894515154546456456;
 
@@ -894,15 +892,15 @@ START_TEST(s21_is_greater_test_32) {
   b.bits[1] = 0b11000011110010000000101111011001;
   b.bits[2] = 0b00000000000000000000000000000100;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_33) {
+START_TEST(is_greater_test_33) {
   // 4396
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -79228162514264337593543950335;
   // src2 = 1;
 
@@ -914,15 +912,15 @@ START_TEST(s21_is_greater_test_33) {
   b.bits[1] = 0b00000000000000000000000000000000;
   b.bits[2] = 0b00000000000000000000000000000000;
   b.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_34) {
+START_TEST(is_greater_test_34) {
   // 4414
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 32323465788987654;
   // src2 = 67543278.89765424354657687;
 
@@ -934,7 +932,7 @@ START_TEST(s21_is_greater_test_34) {
   b.bits[1] = 0b11011001001111010001001011000110;
   b.bits[2] = 0b00000000000001011001011001001000;
   b.bits[3] = 0b00000000000100010000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   // printf("\n***\n%u, %u, %u, %u\n%u, %u, %u, %u\n***\n", a.bits[3],
   // a.bits[2],
@@ -945,9 +943,9 @@ START_TEST(s21_is_greater_test_34) {
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_35) {
+START_TEST(is_greater_test_35) {
   // 4432
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = -784515454.7989898652154545652;
   // src2 = -579895323215489956.67897455465;
 
@@ -959,15 +957,15 @@ START_TEST(s21_is_greater_test_35) {
   b.bits[1] = 0b00111000110110101110001010110100;
   b.bits[2] = 0b10111011010111111101000100011110;
   b.bits[3] = 0b10000000000010110000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_greater_test_36) {
+START_TEST(is_greater_test_36) {
   // 4450
-  s21_decimal a, b;
+  decimal a, b;
   // src1 = 0;
   // src2 = -37986322154988653.784354545765;
 
@@ -979,7 +977,7 @@ START_TEST(s21_is_greater_test_36) {
   b.bits[1] = 0b01000010001101101011011001100001;
   b.bits[2] = 0b01111010101111011000110010011010;
   b.bits[3] = 0b10000000000011000000000000000000;
-  int result = s21_is_greater(a, b);
+  int result = is_greater(a, b);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
@@ -989,71 +987,71 @@ Suite *suite_is_greater(void) {
   Suite *suite = suite_create("is_greater");
   TCase *testcase = tcase_create("case_is_greater");
 
-  tcase_add_test(testcase, s21_is_greater_test);
+  tcase_add_test(testcase, is_greater_test);
 
-  tcase_add_test(testcase, s21_is_greater_test_1a);
-  tcase_add_test(testcase, s21_is_greater_test_2a);
-  tcase_add_test(testcase, s21_is_greater_test_2_1a);
-  tcase_add_test(testcase, s21_is_greater_test_3a);
-  tcase_add_test(testcase, s21_is_greater_test_4a);
-  tcase_add_test(testcase, s21_is_greater_test_4_1a);
-  tcase_add_test(testcase, s21_is_greater_test_5a);
-  tcase_add_test(testcase, s21_is_greater_test_5_1a);
-  tcase_add_test(testcase, s21_is_greater_test_6a);
-  tcase_add_test(testcase, s21_is_greater_test_7a);
-  tcase_add_test(testcase, s21_is_greater_test_8a);
-  tcase_add_test(testcase, s21_is_greater_test_9a);
-  tcase_add_test(testcase, s21_is_greater_test_10a);
+  tcase_add_test(testcase, is_greater_test_1a);
+  tcase_add_test(testcase, is_greater_test_2a);
+  tcase_add_test(testcase, is_greater_test_2_1a);
+  tcase_add_test(testcase, is_greater_test_3a);
+  tcase_add_test(testcase, is_greater_test_4a);
+  tcase_add_test(testcase, is_greater_test_4_1a);
+  tcase_add_test(testcase, is_greater_test_5a);
+  tcase_add_test(testcase, is_greater_test_5_1a);
+  tcase_add_test(testcase, is_greater_test_6a);
+  tcase_add_test(testcase, is_greater_test_7a);
+  tcase_add_test(testcase, is_greater_test_8a);
+  tcase_add_test(testcase, is_greater_test_9a);
+  tcase_add_test(testcase, is_greater_test_10a);
 
-  // tcase_add_test(testcase, s21_is_greater_test_1b);
-  // tcase_add_test(testcase, s21_is_greater_test_2b);
-  // tcase_add_test(testcase, s21_is_greater_test_3b);
-  // tcase_add_test(testcase, s21_is_greater_test_4b);
-  // tcase_add_test(testcase, s21_is_greater_test_5b);
-  // tcase_add_test(testcase, s21_is_greater_test_6b);
-  // tcase_add_test(testcase, s21_is_greater_test_7b);
-  // tcase_add_test(testcase, s21_is_greater_test_8b);
-  // tcase_add_test(testcase, s21_is_greater_test_9b);
-  // tcase_add_test(testcase, s21_is_greater_test_10b);
-  tcase_add_test(testcase, s21_is_greater_test_11b);
+  // tcase_add_test(testcase, is_greater_test_1b);
+  // tcase_add_test(testcase, is_greater_test_2b);
+  // tcase_add_test(testcase, is_greater_test_3b);
+  // tcase_add_test(testcase, is_greater_test_4b);
+  // tcase_add_test(testcase, is_greater_test_5b);
+  // tcase_add_test(testcase, is_greater_test_6b);
+  // tcase_add_test(testcase, is_greater_test_7b);
+  // tcase_add_test(testcase, is_greater_test_8b);
+  // tcase_add_test(testcase, is_greater_test_9b);
+  // tcase_add_test(testcase, is_greater_test_10b);
+  tcase_add_test(testcase, is_greater_test_11b);
 
-  tcase_add_test(testcase, s21_is_greater_test_1);
-  tcase_add_test(testcase, s21_is_greater_test_2);
-  tcase_add_test(testcase, s21_is_greater_test_3);
-  tcase_add_test(testcase, s21_is_greater_test_4);
-  tcase_add_test(testcase, s21_is_greater_test_5);
-  tcase_add_test(testcase, s21_is_greater_test_6);
-  tcase_add_test(testcase, s21_is_greater_test_7);
-  tcase_add_test(testcase, s21_is_greater_test_8);
-  tcase_add_test(testcase, s21_is_greater_test_8);
-  tcase_add_test(testcase, s21_is_greater_test_9);
-  tcase_add_test(testcase, s21_is_greater_test_10);
-  tcase_add_test(testcase, s21_is_greater_test_11);
-  tcase_add_test(testcase, s21_is_greater_test_12);
-  tcase_add_test(testcase, s21_is_greater_test_13);
-  tcase_add_test(testcase, s21_is_greater_test_14);
-  tcase_add_test(testcase, s21_is_greater_test_15);
-  tcase_add_test(testcase, s21_is_greater_test_16);
-  tcase_add_test(testcase, s21_is_greater_test_17);
-  tcase_add_test(testcase, s21_is_greater_test_18);
-  tcase_add_test(testcase, s21_is_greater_test_19);
-  tcase_add_test(testcase, s21_is_greater_test_20);
-  tcase_add_test(testcase, s21_is_greater_test_21);
-  tcase_add_test(testcase, s21_is_greater_test_22);
-  tcase_add_test(testcase, s21_is_greater_test_23);
-  tcase_add_test(testcase, s21_is_greater_test_24);
-  tcase_add_test(testcase, s21_is_greater_test_25);
-  tcase_add_test(testcase, s21_is_greater_test_26);
-  tcase_add_test(testcase, s21_is_greater_test_27);
-  tcase_add_test(testcase, s21_is_greater_test_28);
-  tcase_add_test(testcase, s21_is_greater_test_29);
-  tcase_add_test(testcase, s21_is_greater_test_30);
-  tcase_add_test(testcase, s21_is_greater_test_31);
-  tcase_add_test(testcase, s21_is_greater_test_32);
-  tcase_add_test(testcase, s21_is_greater_test_33);
-  tcase_add_test(testcase, s21_is_greater_test_34);
-  tcase_add_test(testcase, s21_is_greater_test_35);
-  tcase_add_test(testcase, s21_is_greater_test_36);
+  tcase_add_test(testcase, is_greater_test_1);
+  tcase_add_test(testcase, is_greater_test_2);
+  tcase_add_test(testcase, is_greater_test_3);
+  tcase_add_test(testcase, is_greater_test_4);
+  tcase_add_test(testcase, is_greater_test_5);
+  tcase_add_test(testcase, is_greater_test_6);
+  tcase_add_test(testcase, is_greater_test_7);
+  tcase_add_test(testcase, is_greater_test_8);
+  tcase_add_test(testcase, is_greater_test_8);
+  tcase_add_test(testcase, is_greater_test_9);
+  tcase_add_test(testcase, is_greater_test_10);
+  tcase_add_test(testcase, is_greater_test_11);
+  tcase_add_test(testcase, is_greater_test_12);
+  tcase_add_test(testcase, is_greater_test_13);
+  tcase_add_test(testcase, is_greater_test_14);
+  tcase_add_test(testcase, is_greater_test_15);
+  tcase_add_test(testcase, is_greater_test_16);
+  tcase_add_test(testcase, is_greater_test_17);
+  tcase_add_test(testcase, is_greater_test_18);
+  tcase_add_test(testcase, is_greater_test_19);
+  tcase_add_test(testcase, is_greater_test_20);
+  tcase_add_test(testcase, is_greater_test_21);
+  tcase_add_test(testcase, is_greater_test_22);
+  tcase_add_test(testcase, is_greater_test_23);
+  tcase_add_test(testcase, is_greater_test_24);
+  tcase_add_test(testcase, is_greater_test_25);
+  tcase_add_test(testcase, is_greater_test_26);
+  tcase_add_test(testcase, is_greater_test_27);
+  tcase_add_test(testcase, is_greater_test_28);
+  tcase_add_test(testcase, is_greater_test_29);
+  tcase_add_test(testcase, is_greater_test_30);
+  tcase_add_test(testcase, is_greater_test_31);
+  tcase_add_test(testcase, is_greater_test_32);
+  tcase_add_test(testcase, is_greater_test_33);
+  tcase_add_test(testcase, is_greater_test_34);
+  tcase_add_test(testcase, is_greater_test_35);
+  tcase_add_test(testcase, is_greater_test_36);
 
   suite_add_tcase(suite, testcase);
   return suite;

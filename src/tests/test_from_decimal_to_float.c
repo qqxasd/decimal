@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "./../s21_decimal.h"
+#include "./../decimal.h"
 
-static s21_decimal src[] = {
+static decimal src[] = {
     {{0x000026B9, 0x00000000, 0x00000000, 0x00030000}},  // 9.913
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
@@ -72,9 +72,9 @@ static float dst[] = {
 };
 
 START_TEST(test) {
-  for (size_t i = 0; i < sizeof(src) / sizeof(s21_decimal); ++i) {
+  for (size_t i = 0; i < sizeof(src) / sizeof(decimal); ++i) {
     float tmp;
-    int ret = s21_from_decimal_to_float(src[i], &tmp);
+    int ret = from_decimal_to_float(src[i], &tmp);
     if (tmp != dst[i]) {
       char buf1[512];
       char buf2[512];
@@ -93,8 +93,8 @@ Suite *suite_from_decimal_to_float(void) {
   Suite *s;
   TCase *tc;
 
-  s = suite_create("s21_from_decimal_to_float");
-  tc = tcase_create("s21_from_decimal_to_float");
+  s = suite_create("from_decimal_to_float");
+  tc = tcase_create("from_decimal_to_float");
 
   if (s != NULL && tc != NULL) {
     tcase_add_test(tc, test);

@@ -1,13 +1,13 @@
-#include "../s21_decimal.h"
+#include "../decimal.h"
 #include "unit_tests.h"
 
 START_TEST(less_or_equal_1) {
   float num1 = 1.375342323523;
   float num2 = 1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -15,10 +15,10 @@ END_TEST
 START_TEST(less_or_equal_2) {
   float num1 = 1.39;
   float num2 = 1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -26,10 +26,10 @@ END_TEST
 START_TEST(less_or_equal_3) {
   float num1 = 1.39;
   float num2 = -1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -37,10 +37,10 @@ END_TEST
 START_TEST(less_or_equal_4) {
   int num1 = 0;
   int num2 = 0;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -48,10 +48,10 @@ END_TEST
 START_TEST(less_or_equal_5) {
   int num1 = 3;
   int num2 = 9;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -59,10 +59,10 @@ END_TEST
 START_TEST(less_or_equal_6) {
   int num1 = -3;
   int num2 = -3;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -70,10 +70,10 @@ END_TEST
 START_TEST(less_or_equal_7) {
   float num1 = -3453434.232446543232446543;
   float num2 = -3.232323233232323233;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -81,10 +81,10 @@ END_TEST
 START_TEST(less_or_equal_8) {
   float num1 = -34534553434.232446543232446543;
   float num2 = 34534553434.232446543232446543;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -92,10 +92,10 @@ END_TEST
 START_TEST(less_or_equal_9) {
   float num1 = 1.78;
   float num2 = 1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -103,10 +103,10 @@ END_TEST
 START_TEST(less_or_equal_10) {
   float num1 = -3453453452.0;
   float num2 = -34.0;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -114,10 +114,10 @@ END_TEST
 START_TEST(less_or_equal_12) {
   float num1 = 1042354546.34534534;
   float num2 = 104235454634.345345;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -125,10 +125,10 @@ END_TEST
 START_TEST(less_or_equal_13) {
   float num1 = 1042.5667777;
   float num2 = 1042.345345;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -136,10 +136,10 @@ END_TEST
 START_TEST(less_or_equal_14) {
   float num1 = 1.375342323523;
   float num2 = 1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -147,10 +147,10 @@ END_TEST
 START_TEST(less_or_equal_15) {
   float num1 = 1.39;
   float num2 = 1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -158,10 +158,10 @@ END_TEST
 START_TEST(less_or_equal_16) {
   float num1 = 1.39;
   float num2 = -1.39;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -169,10 +169,10 @@ END_TEST
 START_TEST(less_or_equal_17) {
   int num1 = 0;
   int num2 = 0;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -180,10 +180,10 @@ END_TEST
 START_TEST(less_or_equal_18) {
   int num1 = 3;
   int num2 = 9;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -191,10 +191,10 @@ END_TEST
 START_TEST(less_or_equal_19) {
   int num1 = -3;
   int num2 = -3;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
@@ -202,10 +202,10 @@ END_TEST
 START_TEST(less_or_equal_20) {
   int num1 = 10;
   int num2 = 3;
-  s21_decimal dec1, dec2;
-  s21_from_int_to_decimal(num1, &dec1);
-  s21_from_int_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_int_to_decimal(num1, &dec1);
+  from_int_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -213,10 +213,10 @@ END_TEST
 START_TEST(less_or_equal_21) {
   float num1 = 104232346.34534534;
   float num2 = 3.3453453234;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, FALSE);
 }
 END_TEST
@@ -224,140 +224,139 @@ END_TEST
 START_TEST(less_or_equal_22) {
   float num1 = -3.34534534;
   float num2 = 3.34534534;
-  s21_decimal dec1, dec2;
-  s21_from_float_to_decimal(num1, &dec1);
-  s21_from_float_to_decimal(num2, &dec2);
-  int res = s21_is_less_or_equal(dec1, dec2);
+  decimal dec1, dec2;
+  from_float_to_decimal(num1, &dec1);
+  from_float_to_decimal(num2, &dec2);
+  int res = is_less_or_equal(dec1, dec2);
   ck_assert_int_eq(res, TRUE);
 }
 END_TEST
 
-START_TEST(s21_less_or_equal_23) {
-  s21_decimal dec5 = {
-      {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
-  s21_decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};  // -1.2;
-  ck_assert_int_eq(s21_is_less_or_equal(dec5, dec6), 0);
-  ck_assert_int_eq(s21_is_less_or_equal(dec6, dec5), 1);
+START_TEST(less_or_equal_23) {
+  decimal dec5 = {
+      {12345, 0, 0, 0b00000000000001000000000000000000}};           //  1.2345
+  decimal dec6 = {{12, 0, 0, 0b10000000000000010000000000000000}};  // -1.2;
+  ck_assert_int_eq(is_less_or_equal(dec5, dec6), 0);
+  ck_assert_int_eq(is_less_or_equal(dec6, dec5), 1);
 
-  s21_decimal dec7 = {
-      {12345, 0, 0, 0b10000000000001000000000000000000}};  // -1.2345
-  s21_decimal dec8 = {{12, 0, 0, 0b00000000000000010000000000000000}};  //  1.2;
-  ck_assert_int_eq(s21_is_less_or_equal(dec7, dec8), 1);
-  ck_assert_int_eq(s21_is_less_or_equal(dec8, dec7), 0);
+  decimal dec7 = {
+      {12345, 0, 0, 0b10000000000001000000000000000000}};           // -1.2345
+  decimal dec8 = {{12, 0, 0, 0b00000000000000010000000000000000}};  //  1.2;
+  ck_assert_int_eq(is_less_or_equal(dec7, dec8), 1);
+  ck_assert_int_eq(is_less_or_equal(dec8, dec7), 0);
 
-  s21_decimal dec1 = {
-      {12345, 0, 0, 0b00000000000001000000000000000000}};  //  1.2345
-  s21_decimal dec2 = {{12, 0, 0, 0b00000000000000010000000000000000}};  //  1.2;
-  ck_assert_int_eq(s21_is_less_or_equal(dec1, dec2), 0);
-  ck_assert_int_eq(s21_is_less_or_equal(dec2, dec1), 1);
+  decimal dec1 = {
+      {12345, 0, 0, 0b00000000000001000000000000000000}};           //  1.2345
+  decimal dec2 = {{12, 0, 0, 0b00000000000000010000000000000000}};  //  1.2;
+  ck_assert_int_eq(is_less_or_equal(dec1, dec2), 0);
+  ck_assert_int_eq(is_less_or_equal(dec2, dec1), 1);
 
-  s21_decimal dec3 = {
-      {12345, 0, 0, 0b10000000000001000000000000000000}};  // -1.2345
-  s21_decimal dec4 = {
-      {12, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2;
-  ck_assert_int_eq(s21_is_less_or_equal(dec3, dec4), 1);
-  ck_assert_int_eq(s21_is_less_or_equal(dec4, dec3), 0);
+  decimal dec3 = {
+      {12345, 0, 0, 0b10000000000001000000000000000000}};           // -1.2345
+  decimal dec4 = {{12, 0, 0, 0b10000000000000010000000000000000}};  //  -1.2;
+  ck_assert_int_eq(is_less_or_equal(dec3, dec4), 1);
+  ck_assert_int_eq(is_less_or_equal(dec4, dec3), 0);
 
-  s21_decimal dec9 = {{12345, 0, 0, 0}};
-  s21_decimal dec10 = {{12345, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(dec9, dec10), 1);
-  ck_assert_int_eq(s21_is_less_or_equal(dec10, dec9), 1);
+  decimal dec9 = {{12345, 0, 0, 0}};
+  decimal dec10 = {{12345, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(dec9, dec10), 1);
+  ck_assert_int_eq(is_less_or_equal(dec10, dec9), 1);
 
-  s21_decimal dec11 = {{0, 0, 0, 0}};
-  s21_decimal dec12 = {{0, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(dec11, dec12), 1);
-  ck_assert_int_eq(s21_is_less_or_equal(dec12, dec11), 1);
+  decimal dec11 = {{0, 0, 0, 0}};
+  decimal dec12 = {{0, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(dec11, dec12), 1);
+  ck_assert_int_eq(is_less_or_equal(dec12, dec11), 1);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_1) {
-  s21_decimal a = {{1, 0, 0, 0}};
-  s21_decimal b = {{1, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b),
+START_TEST(test_is_less_or_equal_1) {
+  decimal a = {{1, 0, 0, 0}};
+  decimal b = {{1, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b),
                    TRUE);  // Возвращаемое значение : 0 - FALSE   1 - TRUE
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_2) {
-  s21_decimal a = {{1, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_2) {
+  decimal a = {{1, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_2i) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_2i) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_3) {
-  s21_decimal a = {{MAX_U_INT - 1, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 0, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_3) {
+  decimal a = {{MAX_U_INT - 1, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 0, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_4) {
-  s21_decimal a = {{MAX_U_INT, 0, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 1, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_4) {
+  decimal a = {{MAX_U_INT, 0, 0, 0}};
+  decimal b = {{MAX_U_INT, 1, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_41) {
-  s21_decimal a = {{MAX_U_INT, 1, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, 1, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_41) {
+  decimal a = {{MAX_U_INT, 1, 0, 0}};
+  decimal b = {{MAX_U_INT, 1, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_5) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT - 1, 0, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_5) {
+  decimal a = {{MAX_U_INT, MAX_U_INT - 1, 0, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, 0, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_6) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_6) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_7) {
-  s21_decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
-  s21_decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_7) {
+  decimal a = {{MAX_U_INT, MAX_U_INT, MAX_U_INT - 1, 0}};
+  decimal b = {{MAX_U_INT, MAX_U_INT, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_8) {
-  s21_decimal a = {{0, MAX_U_INT, MAX_U_INT, 0}};
-  s21_decimal b = {{0, MAX_U_INT, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_8) {
+  decimal a = {{0, MAX_U_INT, MAX_U_INT, 0}};
+  decimal b = {{0, MAX_U_INT, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_9) {
-  s21_decimal a = {{0, 0, MAX_U_INT, 0}};
-  s21_decimal b = {{0, 0, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_9) {
+  decimal a = {{0, 0, MAX_U_INT, 0}};
+  decimal b = {{0, 0, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_test_is_less_or_equal_10) {
-  s21_decimal a = {{0, 0, 0, 0}};
-  s21_decimal b = {{0, 0, MAX_U_INT, 0}};
-  ck_assert_int_eq(s21_is_less_or_equal(a, b), TRUE);
+START_TEST(test_is_less_or_equal_10) {
+  decimal a = {{0, 0, 0, 0}};
+  decimal b = {{0, 0, MAX_U_INT, 0}};
+  ck_assert_int_eq(is_less_or_equal(a, b), TRUE);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest1) {
+START_TEST(is_less_or_equalTest1) {
   // 3172
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 2;
   // src2 = 3;
 
@@ -369,15 +368,15 @@ START_TEST(s21_is_less_or_equalTest1) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest2) {
+START_TEST(is_less_or_equalTest2) {
   // 3190
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 3;
   // src2 = 2;
 
@@ -389,15 +388,15 @@ START_TEST(s21_is_less_or_equalTest2) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest3) {
+START_TEST(is_less_or_equalTest3) {
   // 3208
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 3;
   // src2 = 3;
 
@@ -409,15 +408,15 @@ START_TEST(s21_is_less_or_equalTest3) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest4) {
+START_TEST(is_less_or_equalTest4) {
   // 3226
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 2;
   // src2 = 0;
 
@@ -429,15 +428,15 @@ START_TEST(s21_is_less_or_equalTest4) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest5) {
+START_TEST(is_less_or_equalTest5) {
   // 3244
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0;
   // src2 = 3;
 
@@ -449,15 +448,15 @@ START_TEST(s21_is_less_or_equalTest5) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest6) {
+START_TEST(is_less_or_equalTest6) {
   // 3262
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 2;
   // src2 = 0;
 
@@ -469,15 +468,15 @@ START_TEST(s21_is_less_or_equalTest6) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest7) {
+START_TEST(is_less_or_equalTest7) {
   // 3280
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 6521;
   // src2 = 74121;
 
@@ -489,15 +488,15 @@ START_TEST(s21_is_less_or_equalTest7) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest8) {
+START_TEST(is_less_or_equalTest8) {
   // 3298
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 4;
   // src2 = 97623323;
 
@@ -510,15 +509,15 @@ START_TEST(s21_is_less_or_equalTest8) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest9) {
+START_TEST(is_less_or_equalTest9) {
   // 3316
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 65658654;
   // src2 = 5;
 
@@ -530,15 +529,15 @@ START_TEST(s21_is_less_or_equalTest9) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest10) {
+START_TEST(is_less_or_equalTest10) {
   // 3334
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -364748;
   // src2 = 1;
 
@@ -550,15 +549,15 @@ START_TEST(s21_is_less_or_equalTest10) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest11) {
+START_TEST(is_less_or_equalTest11) {
   // 3352
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 1;
   // src2 = 98745654321;
 
@@ -570,15 +569,15 @@ START_TEST(s21_is_less_or_equalTest11) {
   src2.bits[1] = 0b00000000000000000000000000010110;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest12) {
+START_TEST(is_less_or_equalTest12) {
   // 3370
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -9878798789;
   // src2 = -3;
 
@@ -591,15 +590,15 @@ START_TEST(s21_is_less_or_equalTest12) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b10000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest13) {
+START_TEST(is_less_or_equalTest13) {
   // 3388
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 9999999999999999999;
   // src2 = 1;
 
@@ -611,15 +610,15 @@ START_TEST(s21_is_less_or_equalTest13) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest14) {
+START_TEST(is_less_or_equalTest14) {
   // 3406
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 18446744073709551615;
   // src2 = 1;
 
@@ -631,15 +630,15 @@ START_TEST(s21_is_less_or_equalTest14) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest15) {
+START_TEST(is_less_or_equalTest15) {
   // 3424
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 18446744073709551615.0;
   // src2 = 965453154;
 
@@ -651,15 +650,15 @@ START_TEST(s21_is_less_or_equalTest15) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest16) {
+START_TEST(is_less_or_equalTest16) {
   // 3442
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -545454512454545.35265454545645;
   // src2 = 54564654;
 
@@ -671,15 +670,15 @@ START_TEST(s21_is_less_or_equalTest16) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest18) {
+START_TEST(is_less_or_equalTest18) {
   // 3478
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 7961327845421.879754123131254;
   // src2 = 0;
 
@@ -691,15 +690,15 @@ START_TEST(s21_is_less_or_equalTest18) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest19) {
+START_TEST(is_less_or_equalTest19) {
   // 3496
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 12345677.987654345678987654346;
   // src2 = 87654323456.9876545678987653;
 
@@ -712,15 +711,15 @@ START_TEST(s21_is_less_or_equalTest19) {
   src2.bits[1] = 0b11110101101111000110111111000000;
   src2.bits[2] = 0b00000010110101010000111100111111;
   src2.bits[3] = 0b00000000000100000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest20) {
+START_TEST(is_less_or_equalTest20) {
   // 3514
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -12345677.987654345678987654346;
   // src2 = 87654323456.9876545678987653;
 
@@ -732,15 +731,15 @@ START_TEST(s21_is_less_or_equalTest20) {
   src2.bits[1] = 0b11110101101111000110111111000000;
   src2.bits[2] = 0b00000010110101010000111100111111;
   src2.bits[3] = 0b00000000000100000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest21) {
+START_TEST(is_less_or_equalTest21) {
   // 3532
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 12345677.987654345678987654346;
   // src2 = -87654323456.9876545678987653;
 
@@ -752,15 +751,15 @@ START_TEST(s21_is_less_or_equalTest21) {
   src2.bits[1] = 0b11110101101111000110111111000000;
   src2.bits[2] = 0b00000010110101010000111100111111;
   src2.bits[3] = 0b10000000000100000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest22) {
+START_TEST(is_less_or_equalTest22) {
   // 3550
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -12345677.987654345678987654346;
   // src2 = -87654323456.9876545678987653;
 
@@ -772,15 +771,15 @@ START_TEST(s21_is_less_or_equalTest22) {
   src2.bits[1] = 0b11110101101111000110111111000000;
   src2.bits[2] = 0b00000010110101010000111100111111;
   src2.bits[3] = 0b10000000000100000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest23) {
+START_TEST(is_less_or_equalTest23) {
   // 3568
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0;
   // src2 = 0;
 
@@ -792,15 +791,15 @@ START_TEST(s21_is_less_or_equalTest23) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest24) {
+START_TEST(is_less_or_equalTest24) {
   // 3586
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0;
   // src2 = 0;
 
@@ -812,15 +811,15 @@ START_TEST(s21_is_less_or_equalTest24) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest25) {
+START_TEST(is_less_or_equalTest25) {
   // 3604
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0;
   // src2 = 0;
 
@@ -832,15 +831,15 @@ START_TEST(s21_is_less_or_equalTest25) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest26) {
+START_TEST(is_less_or_equalTest26) {
   // 3622
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 79228162514264337593543950335;
   // src2 = -1;
 
@@ -852,15 +851,15 @@ START_TEST(s21_is_less_or_equalTest26) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b10000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest27) {
+START_TEST(is_less_or_equalTest27) {
   // 3640
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 7922816251427554395;
   // src2 = 65645646;
 
@@ -872,15 +871,15 @@ START_TEST(s21_is_less_or_equalTest27) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest28) {
+START_TEST(is_less_or_equalTest28) {
   // 3658
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 665464545;
   // src2 = 8798232189789785;
 
@@ -892,15 +891,15 @@ START_TEST(s21_is_less_or_equalTest28) {
   src2.bits[1] = 0b00000000000111110100000111110010;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest29) {
+START_TEST(is_less_or_equalTest29) {
   // 3676
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 2.7986531268974139743;
   // src2 = 9.979623121254565121244554;
 
@@ -912,15 +911,15 @@ START_TEST(s21_is_less_or_equalTest29) {
   src2.bits[1] = 0b01110100000101000010011110100011;
   src2.bits[2] = 0b00000000000010000100000101000100;
   src2.bits[3] = 0b00000000000110000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest30) {
+START_TEST(is_less_or_equalTest30) {
   // 3694
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -9798956154578676.797564534156;
   // src2 = -2156878451.854764;
 
@@ -932,15 +931,15 @@ START_TEST(s21_is_less_or_equalTest30) {
   src2.bits[1] = 0b00000000000001111010100110101011;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b10000000000001100000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest31) {
+START_TEST(is_less_or_equalTest31) {
   // 3712
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0.5456465465486476846545465485;
   // src2 = 0.68985125146545154;
 
@@ -952,15 +951,15 @@ START_TEST(s21_is_less_or_equalTest31) {
   src2.bits[1] = 0b00000000111101010001010110011011;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000100010000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest32) {
+START_TEST(is_less_or_equalTest32) {
   // 3730
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -0.77545545454546589781;
   // src2 = 87894515154546456456;
 
@@ -972,15 +971,15 @@ START_TEST(s21_is_less_or_equalTest32) {
   src2.bits[1] = 0b11000011110010000000101111011001;
   src2.bits[2] = 0b00000000000000000000000000000100;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest33) {
+START_TEST(is_less_or_equalTest33) {
   // 3748
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -79228162514264337593543950335;
   // src2 = 1;
 
@@ -992,15 +991,15 @@ START_TEST(s21_is_less_or_equalTest33) {
   src2.bits[1] = 0b00000000000000000000000000000000;
   src2.bits[2] = 0b00000000000000000000000000000000;
   src2.bits[3] = 0b00000000000000000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 1;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest34) {
+START_TEST(is_less_or_equalTest34) {
   // 3766
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 32323465788987654;
   // src2 = 67543278.89765424354657687;
 
@@ -1012,15 +1011,15 @@ START_TEST(s21_is_less_or_equalTest34) {
   src2.bits[1] = 0b11011001001111010001001011000110;
   src2.bits[2] = 0b00000000000001011001011001001000;
   src2.bits[3] = 0b00000000000100010000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest35) {
+START_TEST(is_less_or_equalTest35) {
   // 3784
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = -784515454.7989898652154545652;
   // src2 = -579895323215489956.67897455465;
 
@@ -1032,15 +1031,15 @@ START_TEST(s21_is_less_or_equalTest35) {
   src2.bits[1] = 0b00111000110110101110001010110100;
   src2.bits[2] = 0b10111011010111111101000100011110;
   src2.bits[3] = 0b10000000000010110000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
 END_TEST
 
-START_TEST(s21_is_less_or_equalTest36) {
+START_TEST(is_less_or_equalTest36) {
   // 3802
-  s21_decimal src1, src2;
+  decimal src1, src2;
   // src1 = 0;
   // src2 = -37986322154988653.784354545765;
 
@@ -1052,7 +1051,7 @@ START_TEST(s21_is_less_or_equalTest36) {
   src2.bits[1] = 0b01000010001101101011011001100001;
   src2.bits[2] = 0b01111010101111011000110010011010;
   src2.bits[3] = 0b10000000000011000000000000000000;
-  int result = s21_is_less_or_equal(src1, src2);
+  int result = is_less_or_equal(src1, src2);
   int origin = 0;
   ck_assert_int_eq(result, origin);
 }
@@ -1061,7 +1060,7 @@ END_TEST
 Suite *suite_is_less_or_equal(void) {
   Suite *s;
   TCase *tc;
-  s = suite_create("s21_less_or_equal");
+  s = suite_create("less_or_equal");
   tc = tcase_create("case_less_or_equal");
 
   tcase_add_test(tc, less_or_equal_1);
@@ -1085,56 +1084,56 @@ Suite *suite_is_less_or_equal(void) {
   tcase_add_test(tc, less_or_equal_20);
   tcase_add_test(tc, less_or_equal_21);
   tcase_add_test(tc, less_or_equal_22);
-  tcase_add_test(tc, s21_less_or_equal_23);
+  tcase_add_test(tc, less_or_equal_23);
 
-  tcase_add_test(tc, s21_test_is_less_or_equal_1);
-  tcase_add_test(tc, s21_test_is_less_or_equal_2);
-  tcase_add_test(tc, s21_test_is_less_or_equal_2i);
-  tcase_add_test(tc, s21_test_is_less_or_equal_3);
-  tcase_add_test(tc, s21_test_is_less_or_equal_4);
-  tcase_add_test(tc, s21_test_is_less_or_equal_41);
-  tcase_add_test(tc, s21_test_is_less_or_equal_5);
-  tcase_add_test(tc, s21_test_is_less_or_equal_6);
-  tcase_add_test(tc, s21_test_is_less_or_equal_7);
-  tcase_add_test(tc, s21_test_is_less_or_equal_8);
-  tcase_add_test(tc, s21_test_is_less_or_equal_8);
-  tcase_add_test(tc, s21_test_is_less_or_equal_9);
-  tcase_add_test(tc, s21_test_is_less_or_equal_10);
-  tcase_add_test(tc, s21_is_less_or_equalTest1);
-  tcase_add_test(tc, s21_is_less_or_equalTest2);
-  tcase_add_test(tc, s21_is_less_or_equalTest3);
-  tcase_add_test(tc, s21_is_less_or_equalTest4);
-  tcase_add_test(tc, s21_is_less_or_equalTest5);
-  tcase_add_test(tc, s21_is_less_or_equalTest6);
-  tcase_add_test(tc, s21_is_less_or_equalTest7);
-  tcase_add_test(tc, s21_is_less_or_equalTest8);
-  tcase_add_test(tc, s21_is_less_or_equalTest9);
-  tcase_add_test(tc, s21_is_less_or_equalTest10);
-  tcase_add_test(tc, s21_is_less_or_equalTest11);
-  tcase_add_test(tc, s21_is_less_or_equalTest12);
-  tcase_add_test(tc, s21_is_less_or_equalTest13);
-  tcase_add_test(tc, s21_is_less_or_equalTest14);
-  tcase_add_test(tc, s21_is_less_or_equalTest15);
-  tcase_add_test(tc, s21_is_less_or_equalTest16);
-  tcase_add_test(tc, s21_is_less_or_equalTest18);
-  tcase_add_test(tc, s21_is_less_or_equalTest19);
-  tcase_add_test(tc, s21_is_less_or_equalTest20);
-  tcase_add_test(tc, s21_is_less_or_equalTest21);
-  tcase_add_test(tc, s21_is_less_or_equalTest22);
-  tcase_add_test(tc, s21_is_less_or_equalTest23);
-  tcase_add_test(tc, s21_is_less_or_equalTest24);
-  tcase_add_test(tc, s21_is_less_or_equalTest25);
-  tcase_add_test(tc, s21_is_less_or_equalTest26);
-  tcase_add_test(tc, s21_is_less_or_equalTest27);
-  tcase_add_test(tc, s21_is_less_or_equalTest28);
-  tcase_add_test(tc, s21_is_less_or_equalTest29);
-  tcase_add_test(tc, s21_is_less_or_equalTest30);
-  tcase_add_test(tc, s21_is_less_or_equalTest31);
-  tcase_add_test(tc, s21_is_less_or_equalTest32);
-  tcase_add_test(tc, s21_is_less_or_equalTest33);
-  tcase_add_test(tc, s21_is_less_or_equalTest34);
-  tcase_add_test(tc, s21_is_less_or_equalTest35);
-  tcase_add_test(tc, s21_is_less_or_equalTest36);
+  tcase_add_test(tc, test_is_less_or_equal_1);
+  tcase_add_test(tc, test_is_less_or_equal_2);
+  tcase_add_test(tc, test_is_less_or_equal_2i);
+  tcase_add_test(tc, test_is_less_or_equal_3);
+  tcase_add_test(tc, test_is_less_or_equal_4);
+  tcase_add_test(tc, test_is_less_or_equal_41);
+  tcase_add_test(tc, test_is_less_or_equal_5);
+  tcase_add_test(tc, test_is_less_or_equal_6);
+  tcase_add_test(tc, test_is_less_or_equal_7);
+  tcase_add_test(tc, test_is_less_or_equal_8);
+  tcase_add_test(tc, test_is_less_or_equal_8);
+  tcase_add_test(tc, test_is_less_or_equal_9);
+  tcase_add_test(tc, test_is_less_or_equal_10);
+  tcase_add_test(tc, is_less_or_equalTest1);
+  tcase_add_test(tc, is_less_or_equalTest2);
+  tcase_add_test(tc, is_less_or_equalTest3);
+  tcase_add_test(tc, is_less_or_equalTest4);
+  tcase_add_test(tc, is_less_or_equalTest5);
+  tcase_add_test(tc, is_less_or_equalTest6);
+  tcase_add_test(tc, is_less_or_equalTest7);
+  tcase_add_test(tc, is_less_or_equalTest8);
+  tcase_add_test(tc, is_less_or_equalTest9);
+  tcase_add_test(tc, is_less_or_equalTest10);
+  tcase_add_test(tc, is_less_or_equalTest11);
+  tcase_add_test(tc, is_less_or_equalTest12);
+  tcase_add_test(tc, is_less_or_equalTest13);
+  tcase_add_test(tc, is_less_or_equalTest14);
+  tcase_add_test(tc, is_less_or_equalTest15);
+  tcase_add_test(tc, is_less_or_equalTest16);
+  tcase_add_test(tc, is_less_or_equalTest18);
+  tcase_add_test(tc, is_less_or_equalTest19);
+  tcase_add_test(tc, is_less_or_equalTest20);
+  tcase_add_test(tc, is_less_or_equalTest21);
+  tcase_add_test(tc, is_less_or_equalTest22);
+  tcase_add_test(tc, is_less_or_equalTest23);
+  tcase_add_test(tc, is_less_or_equalTest24);
+  tcase_add_test(tc, is_less_or_equalTest25);
+  tcase_add_test(tc, is_less_or_equalTest26);
+  tcase_add_test(tc, is_less_or_equalTest27);
+  tcase_add_test(tc, is_less_or_equalTest28);
+  tcase_add_test(tc, is_less_or_equalTest29);
+  tcase_add_test(tc, is_less_or_equalTest30);
+  tcase_add_test(tc, is_less_or_equalTest31);
+  tcase_add_test(tc, is_less_or_equalTest32);
+  tcase_add_test(tc, is_less_or_equalTest33);
+  tcase_add_test(tc, is_less_or_equalTest34);
+  tcase_add_test(tc, is_less_or_equalTest35);
+  tcase_add_test(tc, is_less_or_equalTest36);
 
   suite_add_tcase(s, tc);
   return s;

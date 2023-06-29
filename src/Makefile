@@ -1,5 +1,3 @@
-## Makefile by phyliscr [2023]
-
 ## Variables Block
 CC = gcc
 CCFLAGS = -Werror -Wall -Wextra -std=c11
@@ -7,14 +5,14 @@ COVERAGE =
 LIBS = -lpthread -lcheck -lm
 LEAK = -fsanitize=leak -fsanitize=address -fsanitize=undefined -fsanitize=unreachable -fno-sanitize-recover -fstack-protector -fanalyzer
 
-SOURCES = $(wildcard s21_*.c)
+SOURCES = $(wildcard *.c)
 OBJECTS = $(patsubst %.c,%.o,$(SOURCES))
 
 TESTS_DIR = tests/
 TESTS_SRC = $(wildcard $(TESTS_DIR)*.c)
 TESTS_OBJ = $(patsubst %.c,%.o,$(notdir $(TESTS_SRC)))
 
-TARGET = s21_decimal.a
+TARGET = decimal.a
 
 ifeq ($(shell uname -s), Linux)
 	LIBS = -lpthread -lcheck -lsubunit -lm
@@ -23,7 +21,7 @@ endif
 ## Application Block
 .PHONY: all clean test gcov_report
 
-all: gcov_report
+all: $(TARGET)
 
 clean:
 	rm -rf *.o gcov_report *.a *.gcda *.gcno test.info
@@ -87,16 +85,16 @@ gcc_leaks: clean
 	
 arithmetic_tests: clean
 	gcc $(ССFLAGS) -c $(SOURCES)
-	ar rc s21_decimal.a $(OBJECTS)
-	ranlib s21_decimal.a
+	ar rc decimal.a $(OBJECTS)
+	ranlib decimal.a
 	gcc -c test.c $(COVERAGE)
-	gcc test.o $(CCFLAGS) $(LIBS) $(COVERAGE) s21_decimal.a -o test
+	gcc test.o $(CCFLAGS) $(LIBS) $(COVERAGE) decimal.a -o test
 	rm -rf *.o
 
 convert_test: clean
 	gcc $(CCFLAGS) -c $(SOURCES)
-	ar rc s21_decimal.a $(OBJECTS)
-	ranlib s21_decimal.a
+	ar rc decimal.a $(OBJECTS)
+	ranlib decimal.a
 	gcc -c tests/convertion_test.c $(COVERAGE)
-	gcc convertion_test.o $(CCFLAGS) $(LIBS) $(COVERAGE) s21_decimal.a -o test
+	gcc convertion_test.o $(CCFLAGS) $(LIBS) $(COVERAGE) decimal.a -o test
 	rm -rf *.o

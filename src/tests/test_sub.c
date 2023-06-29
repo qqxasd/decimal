@@ -1,10 +1,10 @@
 #include <check.h>
 #include <stdio.h>
 
-#include "./../s21_decimal.h"
+#include "./../decimal.h"
 #include "unit_tests.h"
 
-static s21_decimal num1[] = {
+static decimal num1[] = {
     {{0x00000019, 0x00000000, 0x00000000, 0x00010000}},  // i= 0: 2.5
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // i= 1: 0
     {{0x00000001, 0x00000000, 0x00000000,
@@ -63,7 +63,7 @@ static s21_decimal num1[] = {
     {{0x00000190, 0x00000000, 0x00000000, 0x80000000}},  // i=37: -400
 };
 
-static s21_decimal num2[] = {
+static decimal num2[] = {
     {{0x00000019, 0x00000000, 0x00000000, 0x00010000}},  // i= 0: 2.5
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // i= 1: 0
     {{0x00000006, 0x00000000, 0x00000000,
@@ -111,7 +111,7 @@ static s21_decimal num2[] = {
     {{0x00000190, 0x00000000, 0x00000000, 0x80000000}},  // i=37: -400
 };
 
-static s21_decimal result[] = {
+static decimal result[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00010000}},  // i= 0: 0.0
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // i= 1: 0
     {{0x00000010, 0x00000000, 0x00000000,
@@ -174,14 +174,14 @@ static s21_decimal result[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x80000000}},  // i=37: 0
 };
 
-static s21_decimal err_num1[] = {
+static decimal err_num1[] = {
     {{0x00000006, 0x00000000, 0x00000000, 0x80010000}},  // -0.6
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  // -1
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
     {{0x0000000A, 0x00000000, 0x00000000, 0x00000000}},  // 10
 };
 
-static s21_decimal err_num2[] = {
+static decimal err_num2[] = {
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
       0x00000000}},  // 79228162514264337593543950335
     {{0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
@@ -200,9 +200,9 @@ static int err_result[] = {
 };
 
 START_TEST(test) {
-  for (size_t i = 0; i < sizeof(num1) / sizeof(s21_decimal); ++i) {
-    s21_decimal tmp;
-    int ret = s21_sub(num1[i], num2[i], &tmp);
+  for (size_t i = 0; i < sizeof(num1) / sizeof(decimal); ++i) {
+    decimal tmp;
+    int ret = sub(num1[i], num2[i], &tmp);
     ck_assert_int_eq(tmp.bits[0], result[i].bits[0]);
     ck_assert_int_eq(tmp.bits[1], result[i].bits[1]);
     ck_assert_int_eq(tmp.bits[2], result[i].bits[2]);
@@ -213,9 +213,9 @@ START_TEST(test) {
 END_TEST
 
 START_TEST(error_test) {
-  for (size_t i = 0; i < sizeof(err_num1) / sizeof(s21_decimal); ++i) {
-    s21_decimal tmp;
-    int ret = s21_sub(err_num1[i], err_num2[i], &tmp);
+  for (size_t i = 0; i < sizeof(err_num1) / sizeof(decimal); ++i) {
+    decimal tmp;
+    int ret = sub(err_num1[i], err_num2[i], &tmp);
     if (tmp.bits[0] == 0) {
       tmp.bits[0] = 1;
     }
@@ -227,8 +227,8 @@ Suite *suite_sub(void) {
   Suite *s;
   TCase *tc;
 
-  s = suite_create("s21_sub");
-  tc = tcase_create("s21_sub");
+  s = suite_create("sub");
+  tc = tcase_create("sub");
 
   if (s != NULL && tc != NULL) {
     tcase_add_test(tc, test);

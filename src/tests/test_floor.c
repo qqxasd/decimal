@@ -1,9 +1,9 @@
 #include <check.h>
 #include <stdio.h>
 
-#include "./../s21_decimal.h"
+#include "./../decimal.h"
 
-static s21_decimal arr[] = {
+static decimal arr[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  // -1
@@ -72,7 +72,7 @@ static s21_decimal arr[] = {
       0x801C0000}},  // -7.9228162514264337593543950335
 };
 
-static s21_decimal result[] = {
+static decimal result[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  //-1
@@ -131,9 +131,9 @@ static s21_decimal result[] = {
 };
 
 START_TEST(test) {
-  for (size_t i = 0; i < sizeof(arr) / sizeof(s21_decimal); ++i) {
-    s21_decimal tmp;
-    int ret = s21_floor(arr[i], &tmp);
+  for (size_t i = 0; i < sizeof(arr) / sizeof(decimal); ++i) {
+    decimal tmp;
+    int ret = d_floor(arr[i], &tmp);
     ck_assert_int_eq(tmp.bits[0], result[i].bits[0]);
     ck_assert_int_eq(tmp.bits[1], result[i].bits[1]);
     ck_assert_int_eq(tmp.bits[2], result[i].bits[2]);
@@ -147,8 +147,8 @@ Suite *suite_floor(void) {
   Suite *s;
   TCase *tc;
 
-  s = suite_create("s21_floor");
-  tc = tcase_create("s21_floor");
+  s = suite_create("floor");
+  tc = tcase_create("floor");
 
   if (s != NULL && tc != NULL) {
     tcase_add_test(tc, test);

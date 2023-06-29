@@ -2,9 +2,9 @@
 #include <limits.h>
 #include <stdio.h>
 
-#include "./../s21_decimal.h"
+#include "./../decimal.h"
 
-static s21_decimal arr[] = {
+static decimal arr[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x00000000}},  // 0
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  // -1
@@ -28,7 +28,7 @@ static s21_decimal arr[] = {
       0x80050000}},  // -1844674407800451901.20000
 };
 
-static s21_decimal result[] = {
+static decimal result[] = {
     {{0x00000000, 0x00000000, 0x00000000, 0x80000000}},  // 0
     {{0x00000001, 0x00000000, 0x00000000, 0x80000000}},  //-1
     {{0x00000001, 0x00000000, 0x00000000, 0x00000000}},  // 1
@@ -53,10 +53,10 @@ static s21_decimal result[] = {
 };
 
 START_TEST(test) {
-  for (size_t i = 0; i < sizeof(arr) / sizeof(s21_decimal); ++i) {
-    s21_decimal value = arr[i];
-    s21_decimal tmp;
-    int ret = s21_negate(value, &tmp);
+  for (size_t i = 0; i < sizeof(arr) / sizeof(decimal); ++i) {
+    decimal value = arr[i];
+    decimal tmp;
+    int ret = negate(value, &tmp);
     ck_assert_int_eq(result[i].bits[0], tmp.bits[0]);
     ck_assert_int_eq(result[i].bits[1], tmp.bits[1]);
     ck_assert_int_eq(result[i].bits[2], tmp.bits[2]);
@@ -70,8 +70,8 @@ Suite *suite_negate(void) {
   Suite *s;
   TCase *tc;
 
-  s = suite_create("s21_negate");
-  tc = tcase_create("s21_negate");
+  s = suite_create("negate");
+  tc = tcase_create("negate");
 
   if (s != NULL && tc != NULL) {
     tcase_add_test(tc, test);
